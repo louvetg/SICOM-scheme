@@ -31,7 +31,7 @@ object * init_environnement(){
 	return obj_meta;
 }
 
-object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, uint num_tab_form[NB_FORM] ){
+object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, adress tab_add_form[NB_FORM] ){
 	uint k = NB_FORM;
 	uint i;
 	object** list_pair_forme;
@@ -49,7 +49,6 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, uint nu
 	for (i = 0; i < k; i++){ 
 		num[i] = calloc(1, sizeof(object*));
 		num[i]->type = SFS_ADRESS;
-		num[i]->this.adress = 0; 
 	}
 
 	list_pair_forme  = calloc(k, sizeof(object*));

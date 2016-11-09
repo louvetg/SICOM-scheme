@@ -40,16 +40,16 @@ object* obj_undef;
 
 
 
-void init_interpreter (char tab_form[NB_FORM][STRLEN], uint num_tab_form[NB_FORM]) {
+void init_interpreter (char tab_form[NB_FORM][STRLEN], adress tab_add_form[NB_FORM]) {
     init_tab_form(tab_form);
-    init_num_tab_form(num_tab_form);
+    init_add_tab_form(tab_add_form);
 
     obj_empty_list      = init_empty_list();
     obj_true		= init_true();
     obj_false		= init_false();
     obj_undef		= init_undef();
     obj_meta            = init_environnement();
-    obj_meta            = init_meta_env(tab_form,obj_meta,num_tab_form );
+    obj_meta            = init_meta_env(tab_form,obj_meta,tab_add_form );
 }
 
 int main ( int argc, char *argv[] ) {
@@ -64,7 +64,7 @@ int main ( int argc, char *argv[] ) {
     FILE *   fp = NULL; /* le flux dans lequel les commande seront lues : stdin (mode shell) ou un fichier */
     
     char tab_form[NB_FORM][STRLEN];
-    uint num_tab_form[NB_FORM];
+    adress tab_add_form[NB_FORM];
 
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
