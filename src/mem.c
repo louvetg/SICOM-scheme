@@ -59,12 +59,12 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, adress 
 
 	for (i = 0; i < k; i++){
 		
-		DEBUG_MSG("%d_Contenu du tableau initial -- forme: %s, adresse: %d --",i,tab_form[i], num_tab_form[i]);
+		DEBUG_MSG("%d_Contenu du tableau initial -- forme: %s, adresse: %d --",i,tab_form[i], tab_add_form[i]);
 		forme[i]->type = SFS_SYMBOL;
 		strcpy(forme[i]->this.symbol, tab_form[i]);
 
 		num[i]->type = SFS_ADRESS;
-		num[i]->this.adress = num_tab_form[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
+		num[i]->this.adress = tab_add_form[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
 		DEBUG_MSG("%d_Creation des objects -- forme: %s, adresse: %d --",i,forme[i]->this.symbol, num[i]->this.adress);
 
 		pair_forme[i]->type = SFS_PAIR;

@@ -89,7 +89,7 @@ int main ( int argc, char *argv[] ) {
         exit( EXIT_SUCCESS );
     }
 		
-    init_interpreter(tab_form, num_tab_form);
+    init_interpreter(tab_form, tab_add_form);
 	
     /*par defaut : mode shell interactif */
     fp = stdin;
