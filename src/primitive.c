@@ -24,19 +24,21 @@ object* moins (object* o){
 		return NULL;
 	}
 	object* obj_bis = cdr(o);
-	object* obj_somme == NULL;
+	object* obj_sous = make_object();
+	obj_sous->type = SFS_NUMBER;
+	obj_sous->this.num = 0;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
-		if ((obj_somme <= INT_MIN) || (obj_somme >= INT_MAX))
+		if ((obj_sous <= INT_MIN) || (obj_sous >= INT_MAX))
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_somme = car(obj_bis)- obj_somme;
+		obj_sous->this.num = car(obj_bis->this.num)- obj_sous->this.num;
 		obj_bis = cdr(obj_bis);
 	}
 	//verif que la soustraction est un integer-----------------------A VERIFIER
-	return obj_somme
+	return obj_sous;
 }
 
 
@@ -60,7 +62,9 @@ object* plus (object* o){
 		return NULL;
 	}
 	object* obj_bis = cdr(o);
-	object* obj_somme == NULL;
+	object* obj_somme = make_object();
+	obj_somme->type = SFS_NUMBER;
+	obj_somme->this.num = 0;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
 		//verif qu'on atteint pas la limite  -----------------------A VERIFIER
@@ -68,7 +72,7 @@ object* plus (object* o){
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_somme = car(obj_bis)+ obj_somme;
+		obj_somme->this.num = car(obj_bis->this.num)+ obj_somme->this.num;
 		obj_bis = cdr(obj_bis);
 	}
 	//verif que l'addition est un integer-----------------------A VERIFIER
@@ -98,8 +102,10 @@ object* produit (object* o){
 		WARNING_MSG("Le calcul est vide");
 		return NULL;
 	}
-	object* obj_bis = cdr(o);
-	object* obj_produit == 1;
+	object* obj_bis = cdr(o);	
+	object* obj_produit = make_object();
+	obj_produit->type = SFS_NUMBER;
+	obj_produit->this.num = 1;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
@@ -107,7 +113,7 @@ object* produit (object* o){
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_produit = car(obj_bis)* obj_produit;
+		obj_produit->this.num = car(obj_bis->this.num)* obj_produit->this.num;
 		obj_bis = cdr(obj_bis);
 	}
 	//verif que la multiplication est un integer-----------------------A VERIFIER
@@ -138,7 +144,9 @@ object* quotient (object* o){
 		return NULL;
 	}
 	object* obj_bis = cdr(o);
-	object* obj_divis == 1;
+	object* obj_divis = make_object();
+	obj_divis->type = SFS_NUMBER;
+	obj_divis->this.num = 1;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
@@ -151,7 +159,7 @@ object* quotient (object* o){
 			WARNING_MSG("Division par 0"); // message mais l'opération continue
 			return NULL;
 		}
-		obj_divis = car(obj_bis)/ obj_divis;
+		obj_divis->this.num = car(obj_bis->this.num)/ obj_divis->this.num;
 		obj_bis = cdr(obj_bis);
 	}
 	//verif que la division est un integer-----------------------A VERIFIER
@@ -224,12 +232,14 @@ object* egal (object* o){
 		return NULL;
 	}
 	object* obj_bis = cdr(o);
-	object* obj_res == NULL;
+	object* obj_res = make_object();
+	obj_res->type = SFS_NUMBER;
+	obj_res->this.num = 1;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
 		if (car(obj_bis) == car(cdr(obj_bis)))
 		{
-			obj_res = obj_true && obj_res;
+			if( obj_res = obj_true && obj_res;
 			obj_bis = cdr(obj_bis);
 		}
 		else
@@ -430,7 +440,7 @@ object* symbol? (object* o){
 	object* obj_res == NULL;
 	while (cdr(obj_bis) != obj_empty_list)
 	{
-		if ((car(obj_bis) == obj_true) ||(car(obj_bis) == obj_false))
+		if (obj_car->type = SFS_SYMBOL)
 		{
 			obj_res = obj_true && obj_res;
 			obj_bis = cdr(obj_bis);
