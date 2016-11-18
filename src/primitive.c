@@ -20,22 +20,22 @@
 object* moins (object* o){
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_sous = make_object();
 	obj_sous->type = SFS_NUMBER;
-	obj_sous->this.num = 0;
+	obj_sous->this.number.this.integer = 0;
 	do
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
-		if ((obj_sous <= INT_MIN) || (obj_sous >= INT_MAX))
+		if (INT_MIN+o.this.number.this.integer > obj_sous)
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_sous->this.num = car(o)->this.num- obj_sous->this.num;
+		obj_sous->this.num = car(o)->this.number.this.integer- obj_sous->this.num.this.integer;
 		o = cdr(o);
-	}while (cdr(o) != obj_empty_list)
+	}while (cdr(cdr(o)) != obj_empty_list)
 	//verif que la soustraction est un integer-----------------------A VERIFIER
 	return obj_sous;
 }
@@ -57,22 +57,22 @@ object* moins (object* o){
 object* plus (object* o){
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_somme = make_object();
 	obj_somme->type = SFS_NUMBER;
-	obj_somme->this.num = 0;
+	obj_somme->this.number.this.integer = 0;
 	do
 	{
 		//verif qu'on atteint pas la limite  -----------------------A VERIFIER
-		if ((obj_somme <= INT_MIN) || (obj_somme >= INT_MAX))
+		if (INT_MIN-o.this.number.this.integer > obj_somme)
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_somme->this.num = car(o)->this.num+ obj_somme->this.num;
+		obj_somme->this.number.this.integer = car(o)->this.number.this.integer+ obj_somme->this.number.this.integer;
 		o = cdr(o);
-	}while (cdr(o) != obj_empty_list)
+	}while (cdr(cdr(o)) != obj_empty_list)
 	//verif que l'addition est un integer-----------------------A VERIFIER
 	return obj_somme;
 }
@@ -97,22 +97,22 @@ object* plus (object* o){
 object* produit (object* o){
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_produit = make_object();
 	obj_produit->type = SFS_NUMBER;
-	obj_produit->this.num = 1;
+	obj_produit->->this.number.this.integer = 1;
 	do
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
-		if ((obj_produit <= INT_MIN) || (obj_produit >= INT_MAX))
+		if (INT_MIN/o.this.number.this.integer > obj_produit)
 		{
 			WARNING_MSG("Overflow"); // message mais l'opération continue
 		}		
-		obj_produit->this.num = car(o)->this.num* obj_produit->this.num;
+		obj_produit->this.number.this.integer = car(o)->this.number.this.integer* obj_produit->this.number.this.integer;
 		o = cdr(o);
-	}while (cdr(o) != obj_empty_list)
+	}while (cdr(cdr(o)) != obj_empty_list)
 	//verif que la multiplication est un integer-----------------------A VERIFIER
 	return obj_produit;
 }
@@ -135,29 +135,35 @@ object* produit (object* o){
 
 
 object* quotient (object* o){
-	if (o == obj_empty_list)
+	if ((o == obj_empty_list))
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_divis = make_object();
 	obj_divis->type = SFS_NUMBER;
-	obj_divis->this.num = 1;
-	do
+	obj_divis->this.number.this.integer = 1;
+	if(car(cdr(o))->this.number.this.integer  == NULL)
+	{
+		obj_divis->this.number.this.integer = obj_divis->this.number.this.integer/ car(o)->this.number.this.integer;
+		return obj_divis;
+	}
+	else
+	{
+		obj_divis->this.number.this.integer = car(o)->this.number.this.integer/ car(cdr(o))->this.number.this.integer;
+		o = cdr(o);
+	}
+	while (cdr(o) != obj_empty_list)
 	{
 		//verif qu'on atteint pas la limite -----------------------A VERIFIER
-		if ((obj_divis <= INT_MIN) || (obj_divis >= INT_MAX))
-		{
-			WARNING_MSG("Overflow");
-		}
-		if(obj_divis == 0)
+		if(obj_divis->this.number.this.integer  == 0)
 		{
 			WARNING_MSG("Division par 0"); // message mais l'opération continue
 			return NULL;
 		}
-		obj_divis->this.num = car(o->this.num)/ obj_divis->this.num;
+		obj_divis->this.number.this.integer = car(o)->this.number.this.integer/ obj_divis->this.number.this.integer;
 		o = cdr(o);
-	}while (cdr(o) != obj_empty_list)
+	}
 	//verif que la division est un integer-----------------------A VERIFIER
 	return obj_divis;
 }
@@ -180,7 +186,22 @@ object* quotient (object* o){
 
 
 object* remainder (object* o){  
-	
+	object* obj_reste = make_object();
+	obj_reste->type = SFS_NUMBER;
+	obj_reste->this.number.this.integer = 1;
+	if ((o == obj_empty_list) || ( cdr(o) == obj_empty_list))
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 2");
+		return NULL;
+	}
+	if (cdr(cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	obj_reste->this.number.this.integer = car(o)->this.number.this.integer % car(cdr(o))->this.number.this.integer;
+	//verif que le reste est un integer-----------------------A VERIFIER
+	return obj_reste;	
 }
 
 
@@ -201,32 +222,24 @@ object* remainder (object* o){
 
 
 object* egal (object* o){  
-	if (o == obj_empty_list)
+	if ((o == obj_empty_list) || ( cdr(o) == obj_empty_list))
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
 	}
-	object* obj_res = make_object();
-	obj_res->type = SFS_NUMBER;
-	object* obj_res_prec = make_object();
-	obj_res_prec->type = SFS_NUMBER;
 	do
 	{
-		if (car(o)->type.num == car(cdr(o))->type.num)
+		if (car(o)->this.number.this.integer == car(cdr(o))->this.number.this.integer)
 		{
-			obj_res->this.num = 1;
-			if( obj_res->this.num && obj_res_prec)
-			{
-				obj_res_prec-> type.num = NULL; // C'est bien l'o-> type. num qui va annuler mon && ???
-			}
+			obj_res=obj_true;
 			o = cdr(o);
 		}
 		else
 		{
-			obj_res_prec-> type.num = NULL;
-			o = cdr(o);
+			obj_res=obj_false;
+			return obj_res
 		}
-	}while (cdr(o) != obj_empty_list);
+	}while (cdr(cdr(o)) != obj_empty_list);
 	//verif que le résultat est un bouleen-----------------------A VERIFIER
 	return obj_res;
 }
@@ -249,37 +262,33 @@ object* egal (object* o){
 
 
 object* inferio (object* o){  
-	if (o == obj_empty_list)
+	if ((o == obj_empty_list) || ( cdr(o) == obj_empty_list))
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
-	}
+	}	
 	object* obj_res = make_object();
 	obj_res->type = SFS_NUMBER;
 	object* obj_res_prec = make_object();
 	obj_res_prec->type = SFS_NUMBER;
 	do
 	{
-		if (car(o)->type.num < car(cdr(o))->type.num)
+		if (car(o)->this.number.this.integer < car(cdr(o))->this.number.this.integer)
 		{
-			obj_res->this.num = 1;
-			if( obj_false && obj_res)
-			{
-				obj_res_prec-> type.num = NULL; // C'est bien l'o-> type. num qui va annuler mon && ???
-			}
+			obj_res=obj_true;
 			o = cdr(o);
 		}
-		else if (car(o)->type.num > car(cdr(o))->type.num)
+		else if (car(o)->this.number.this.integer > car(cdr(o))->this.number.this.integer)
 		{
-			obj_res_prec-> type.num = NULL;
-			o = cdr(o);
+			obj_res=obj_false;
+			return obj_res
 		}
 		else
 		{
 			WARNING_MSG("Il y a égalité");
 			return NULL;
 		}	
-	}while (cdr(o) != obj_empty_list);
+	}while (cdr(cdr(o)) != obj_empty_list);
 	//verif que le résultat est un bouleen-----------------------A VERIFIER
 	return obj_res;
 }
@@ -293,7 +302,7 @@ object* inferio (object* o){
 /**
 *@fn object* superio (object* o)
 *
-*@brief Evalue l'infériorité
+*@brief Evalue la superiorité
 *
 *@param object* o pointeur vers la structure étudiée
 *
@@ -302,37 +311,31 @@ object* inferio (object* o){
 
 
 object* superio (object* o){  
-	if (o == obj_empty_list)
+	if ((o == obj_empty_list) || ( cdr(o) == obj_empty_list))
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
 	}
 	object* obj_res = make_object();
 	obj_res->type = SFS_NUMBER;
-	object* obj_res_prec = make_object();
-	obj_res_prec->type = SFS_NUMBER;
 	do
 	{
-		if (car(o)->type.num > car(cdr(o))->type.num)
+		if (car(o)->this.number.this.integer > car(cdr(o))->this.number.this.integer)
 		{
-			obj_res->this.num = 1;
-			if( obj_false && obj_res)
-			{
-				obj_res_prec-> type.num = NULL; // C'est bien l'o-> type. num qui va annuler mon && ???
-			}
+			obj_res=obj_true;
 			o = cdr(o);
 		}
-		else if (car(o)->type.num< car(cdr(o))->type.num)
+		else if (car(o)->this.number.this.integer < car(cdr(o))->this.number.this.integer)
 		{
-			obj_res_prec-> type.num = NULL;
-			o = cdr(o);
+			obj_res=obj_false;
+			return obj_res
 		}
 		else
 		{
 			WARNING_MSG("Il y a égalité");
 			return NULL;
 		}	
-	}while (cdr(obj_bis) != obj_empty_list);
+	}while (cdr(cdr(o)) != obj_empty_list);
 	//verif que le résultat est un bouleen-----------------------A VERIFIER
 	return obj_res;
 }
@@ -342,7 +345,7 @@ object* superio (object* o){
 /**
 *@fn object* abs (object* o)
 *
-*@brief Evalue l'infériorité
+*@brief Evalue la valeur absolue
 *
 *@param object* o pointeur vers la structure étudiée
 *
@@ -351,8 +354,30 @@ object* superio (object* o){
 
 
 object* abs (object* o){ 
-	 // --------------------------------A COMPLETER
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	object* obj_abs = make_object();
+	obj_abs->type = SFS_NUMBER;
+	if(car(o)->this.number.this.integer <0) // ----------------------------o ou car(o)?
+	{
+		obj_abs->this.number.this.integer= -car(o)->this.number.this.integer;
+		return obj_abs;
+	}
+	else
+	{
+		return o;
+	}
 }
+
+
 
 /***********************************************************************************************************
 /***********************************************************************************************************
@@ -377,7 +402,7 @@ object* abs (object* o){
 object* boolean? (object* o){ 
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("L'expression est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_res = make_object();
@@ -428,7 +453,7 @@ object* null? (object* o){
 object* symbol? (object* o){ 
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Le calcul est vide");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
 	object* obj_res == NULL;
@@ -438,12 +463,12 @@ object* symbol? (object* o){
 		if (o->type = SFS_SYMBOL)
 		{
 			obj_res = obj_true && obj_res;
-			obj_bis = cdr(obj_bis);
+			o = cdr(o);
 		}
 		else
 		{
 			obj_res = obj_false && obj_res;
-			obj_bis = cdr(obj_bis);
+			o = cdr(o);
 		}
 	return obj_res;
 }
@@ -496,7 +521,7 @@ object* car (object* o)
 {
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Trop peu d'arguments");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}	
 	return car(o);	
@@ -518,7 +543,7 @@ object* cdr (object* o)
 {
 	if (o == obj_empty_list)
 	{ 
-		WARNING_MSG("Trop peu d'arguments");
+		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}	
 	return cdr(o);	
