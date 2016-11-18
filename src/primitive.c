@@ -388,32 +388,6 @@ object* abs (object* o){
 
 
 
-/**
-*@fn object* boolean? (object* o)
-*
-*@brief 
-*
-*@param object* o pointeur vers la structure étudiée
-*
-*@return object o* retourne l'expression passée dans la fonction
-*/
-
-
-object* boolean? (object* o){ 
-	if (o == obj_empty_list)
-	{ 
-		WARNING_MSG("Pas assez d'arguments - min 1");
-		return NULL;
-	}
-	object* obj_res = make_object();
-	obj_res->type = SFS_NUMBER;
-	if (cdr(o)->type. == obj_empty_list)
-	{
-		if(car
-	return obj_res;
-}
-
-
 
 /**
 *@fn object* null? (object* o)
@@ -439,8 +413,9 @@ object* null? (object* o){
 
 
 
+
 /**
-*@fn object* symbol? (object* o)
+*@fn object* isboolean? (object* o)
 *
 *@brief 
 *
@@ -450,33 +425,169 @@ object* null? (object* o){
 */
 
 
-object* symbol? (object* o){ 
+object* isboolean (object* o){ 
 	if (o == obj_empty_list)
 	{ 
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
-	object* obj_res == NULL;
-	object* obj_res = make_object();
-	while (cdr(o) != obj_empty_list)
-	{
-		if (o->type = SFS_SYMBOL)
+	do
+	{ // ------------------------ A VERIFIER
+		if ((car(o)->this.number.this.integer == obj_true) || ((car(o)->this.number.this.integer == obj_false)  )
 		{
-			obj_res = obj_true && obj_res;
+			obj_res=obj_true;
 			o = cdr(o);
 		}
 		else
 		{
-			obj_res = obj_false && obj_res;
+			obj_res=obj_false;
+			return obj_res
+		}
+	}while (cdr(cdr(o)) != obj_empty_list);
+	return obj_res;
+}
+
+
+
+/**
+*@fn object* issymbol (object* o)
+*
+*@brief 
+*
+*@param object* o pointeur vers la structure étudiée
+*
+*@return object o* retourne l'expression passée dans la fonction
+*/
+
+
+object* issymbol (object* o){ 
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	do
+	{ // ------------------------ A VERIFIER
+		if (car(o)->this.type == SFS_SYMBOL)
+		{
+			obj_res=obj_true;
 			o = cdr(o);
 		}
+		else
+		{
+			obj_res=obj_false;
+			return obj_res
+		}
+	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
 }
 
 	
 
+/**
+*@fn object* isinteger (object* o)
+*
+*@brief 
+*
+*@param object* o pointeur vers la structure étudiée
+*
+*@return object o* retourne l'expression passée dans la fonction
+*/
 
 
+object* isinteger (object* o){ 
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	do
+	{ // ------------------------ A VERIFIER
+		if (car(o)->this.type == SFS_NUMBER)
+		{
+			obj_res=obj_true;
+			o = cdr(o);
+		}
+		else
+		{
+			obj_res=obj_false;
+			return obj_res
+		}
+	}while (cdr(cdr(o)) != obj_empty_list);
+	return obj_res;
+}
+		    
+		    
+		    
+		    
+/**
+*@fn object* ischar (object* o)
+*
+*@brief 
+*
+*@param object* o pointeur vers la structure étudiée
+*
+*@return object o* retourne l'expression passée dans la fonction
+*/
+
+
+object* ischar (object* o){ 
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	do
+	{ // ------------------------ A VERIFIER
+		if (car(o)->this.type == SFS_CHARACTER)
+		{
+			obj_res=obj_true;
+			o = cdr(o);
+		}
+		else
+		{
+			obj_res=obj_false;
+			return obj_res
+		}
+	}while (cdr(cdr(o)) != obj_empty_list);
+	return obj_res;
+}		    
+		    
+		    
+		    
+		    
+/**
+*@fn object* isstring (object* o)
+*
+*@brief 
+*
+*@param object* o pointeur vers la structure étudiée
+*
+*@return object o* retourne l'expression passée dans la fonction
+*/
+
+
+object* isstring (object* o){ 
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	do
+	{ // ------------------------ A VERIFIER
+		if (car(o)->this.type == SFS_STRING)
+		{
+			obj_res=obj_true;
+			o = cdr(o);
+		}
+		else
+		{
+			obj_res=obj_false;
+			return obj_res
+		}
+	}while (cdr(cdr(o)) != obj_empty_list);
+	return obj_res;
+}	
 
 
 /***********************************************************************************************************
@@ -499,8 +610,23 @@ object* symbol? (object* o){
 	
 	
 object* cons (object* o)	
-{
-// --------------------------------------------A COMPLETER	
+{	
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	object* obj_cons = make_object();
+	obj_cons->type = SFS_PAIR;
+	// -----------------------------N'affiche pas les . entre les paires, on doit analyser si '(a) ou 4 ? ou deja fait avant?
+	obj_cons->this.pair.car = car (o);
+	obj_cons->this.pair.cdr = cdr (o);
+ 
 }
 	
 	
@@ -517,7 +643,7 @@ object* cons (object* o)
 */
 	
 	
-object* car (object* o)	
+object* car (object* o)	// ---------------- a tester si o est une liste 
 {
 	if (o == obj_empty_list)
 	{ 
@@ -539,7 +665,7 @@ object* car (object* o)
 */
 	
 	
-object* cdr (object* o)	
+object* cdr (object* o)	// ---------------- a tester si o est une liste 
 {
 	if (o == obj_empty_list)
 	{ 
@@ -562,7 +688,7 @@ object* cdr (object* o)
 	
 object* set-car! (object* o)	
 {
-	
+	// -------------------- A FAIRE
 }
 	
 	
@@ -579,5 +705,5 @@ object* set-car! (object* o)
 	
 object* set-cdr! (object* o)	
 {
-	
+	// -------------------- A FAIRE	
 }
