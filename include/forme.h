@@ -19,8 +19,8 @@ extern "C" {
 #define IF 0x06
 
 void init_tab_form(char tab_form[NB_FORM][STRLEN]);
-void init_num_tab_form(uint num_tab_form[NB_FORM]);
-object* forme(object* o, uint tst_form, object* obj_meta);
+void init_add_tab_form(adress tab_add_form[NB_FORM]);
+object* forme(object* o, adress tst_form, object* obj_meta);
 object* quote (object* o);
 object* and (object* o);
 object* or (object* o);

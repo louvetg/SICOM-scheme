@@ -25,7 +25,7 @@ void *sfs_malloc( size_t size );
 void  sfs_free( void *ptr );
 
 object * init_environnement();
-object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, uint num_tab_form[NB_FORM] );
+object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, adress tab_add_form[NB_FORM] );
 
 #ifdef __cplusplus
 }

@@ -28,7 +28,19 @@ typedef struct object_t {
         char             character;
         string           strg;
         string           symbol;
-		uint			 adress;
+
+
+		struct adress_t {
+
+			uint addtype;
+
+			union {
+				struct  object_t* (*prim)(struct  object_t*);
+				struct object_t* (*forme)(struct  object_t*);
+				struct object_t* (*mem_forme)(struct  object_t*, struct  object_t*);
+			}this;
+
+		} adress;
 
         struct pair_t {
             struct object_t *car;
@@ -58,6 +70,9 @@ object* init_undef();
 #define SFS_ADRESS		 0x07
 #define SFS_UNDEF		 0x08
 
+#define ADD_PRIMITIVE     0x00
+#define ADD_FORME	      0x01
+#define ADD_MEM_FORME	  0x02
 
 extern object* obj_empty_list;
 extern object* obj_true;
@@ -67,6 +82,8 @@ extern object* obj_undef;
 
 object* obj_cpy(object*);
 
+
+typedef struct adress_t adress;
 
 #ifdef __cplusplus
 }
