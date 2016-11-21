@@ -351,7 +351,7 @@ object* superio (object* o){
 
 
 /**
-*@fn object* abs (object* o)
+*@fn object* fabs (object* o)
 *
 *@brief Evalue la valeur absolue
 *
@@ -361,7 +361,7 @@ object* superio (object* o){
 */
 
 
-object* abs (object* o){ 
+object* fabs (object* o){ 
 	if (o == obj_empty_list)
 	{ 
 		WARNING_MSG("Pas assez d'arguments - min 1");
@@ -398,7 +398,7 @@ object* abs (object* o){
 
 
 /**
-*@fn object* null? (object* o)
+*@fn object* isnull (object* o)
 *
 *@brief 
 *
@@ -408,7 +408,7 @@ object* abs (object* o){
 */
 
 
-object* null? (object* o){ 
+object* isnull (object* o){ 
 	if (o == obj_empty_list)
 	{ 
 		return obj_true;
@@ -720,7 +720,7 @@ object* cdr (object* o)	// ---------------- a tester si o est une liste
 }	
 
 /**
-*@fn object* set-car! (object* o)
+*@fn object* setcar (object* o)
 *
 *@brief 
 *
@@ -730,7 +730,7 @@ object* cdr (object* o)	// ---------------- a tester si o est une liste
 */
 	
 	
-object* set-car! (object* o)	
+object* setcar (object* o)	
 {
 	if ((o == obj_empty_list) || (cdr(o) == obj_empty_list))
 	{ 
@@ -752,7 +752,7 @@ object* set-car! (object* o)
 	
 	
 /**
-*@fn object* set-cdr! (object* o)
+*@fn object* setcdr! (object* o)
 *
 *@brief 
 *
@@ -762,7 +762,7 @@ object* set-car! (object* o)
 */
 	
 	
-object* set-cdr! (object* o)	
+object* setcdr (object* o)	
 {
 	if ((o == obj_empty_list) || (cdr(o) == obj_empty_list))
 	{ 
@@ -786,7 +786,7 @@ object* set-cdr! (object* o)
 		    
 		    
 /**
-*@fn object* list (object* o)
+*@fn object* islist (object* o)
 *
 *@brief 
 *
@@ -796,7 +796,7 @@ object* set-cdr! (object* o)
 */
 	
 	
-object* list (object* o)	
+object* islist (object* o)	
 {
 	//------------------------A FAIRE
 }
