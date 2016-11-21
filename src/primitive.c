@@ -44,6 +44,7 @@ object* moins (object* o){
 		obj_sous->this.num = obj_sous->this.num.this.integer - car(o)->this.number.this.integer; //(- a b) = a-b
 		o = cdr(o);
 		}
+	}
 	//verif que la soustraction est un integer-----------------------A VERIFIER
 	return obj_sous;
 }
@@ -120,7 +121,7 @@ object* produit (object* o){
 		}		
 		obj_produit->this.number.this.integer = car(o)->this.number.this.integer* obj_produit->this.number.this.integer;
 		o = cdr(o);
-	}while (o != obj_empty_list)
+	}while (o != obj_empty_list);
 	//verif que la multiplication est un integer-----------------------A VERIFIER
 	return obj_produit;
 }
@@ -235,6 +236,7 @@ object* egal (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
 	}
+	object* obj_res = make_object();
 	do
 	{
 		if (car(o)->this.number.this.integer == car(cdr(o))->this.number.this.integer)
@@ -245,7 +247,7 @@ object* egal (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	//verif que le résultat est un bouleen-----------------------A VERIFIER
@@ -289,7 +291,7 @@ object* inferio (object* o){
 		else if (car(o)->this.number.this.integer > car(cdr(o))->this.number.this.integer)
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 		else
 		{
@@ -336,7 +338,7 @@ object* superio (object* o){
 		else if (car(o)->this.number.this.integer < car(cdr(o))->this.number.this.integer)
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 		else
 		{
@@ -439,9 +441,11 @@ object* isboolean (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
+	
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
-		if ((car(o)->this.number.this.integer == obj_true) || ((car(o)->this.number.this.integer == obj_false)  )
+		if ((car(o)->this.number.this.integer == obj_true) || (car(o)->this.number.this.integer == obj_false)  )
 		{
 			obj_res=obj_true;
 			o = cdr(o);
@@ -449,7 +453,7 @@ object* isboolean (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
@@ -473,7 +477,8 @@ object* issymbol (object* o){
 	{ 
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
-	}
+	}	
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
 		if (car(o)->this.type == SFS_SYMBOL)
@@ -484,7 +489,7 @@ object* issymbol (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
@@ -509,6 +514,7 @@ object* isinteger (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
 		if (car(o)->this.type == SFS_NUMBER)
@@ -519,7 +525,7 @@ object* isinteger (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
@@ -545,6 +551,7 @@ object* ischar (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
 		if (car(o)->this.type == SFS_CHARACTER)
@@ -555,7 +562,7 @@ object* ischar (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
@@ -581,6 +588,7 @@ object* isstring (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
 		if (car(o)->this.type == SFS_STRING)
@@ -591,7 +599,7 @@ object* isstring (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
@@ -617,6 +625,7 @@ object* ispair (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
+	object* obj_res = make_object();
 	do
 	{ // ------------------------ A VERIFIER
 		if (car(o)->this.type == SFS_PAIR)
@@ -627,7 +636,7 @@ object* ispair (object* o){
 		else
 		{
 			obj_res=obj_false;
-			return obj_res
+			return obj_res;
 		}
 	}while (cdr(cdr(o)) != obj_empty_list);
 	return obj_res;
