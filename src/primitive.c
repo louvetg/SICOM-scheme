@@ -858,7 +858,33 @@ object* iseq (object* o)
 	
 object* char2integer (object* o)	
 {	
- 
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_CHARACTER)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	 obj_tranfs->type = SFS_NUMBER;
+	if (car(o) <126 || car(o) >0)
+	{
+		obj_trans->type.number.this.integer = sscanf("%d", o);
+		return obj_trans;
+	}
+	else
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
 }		    
 
 
@@ -877,7 +903,33 @@ object* char2integer (object* o)
 	
 object* integer2char (object* o)	
 {	
- 
+ 	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_NUMBER)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	obj_tranfs->type = SFS_CHARACTER;
+	if (car(o) <126 || car(o) >0)
+	{
+		obj_trans = sscanf("%d", o->type.number.this.integer);
+		return obj_trans;
+	}
+	else
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}	
 }		    
 
 
@@ -896,7 +948,25 @@ object* integer2char (object* o)
 	
 object* number2string (object* o)	
 {	
- 
+ 	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_NUMBER)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	obj_tranfs->type = SFS_STRING;
+	obj_trans = sscanf("%d", o->type.number.this.integer);
+	return obj_trans;
 }		    
 
 
@@ -915,7 +985,25 @@ object* number2string (object* o)
 	
 object* string2number (object* o)	
 {	
- 
+ 	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_STRING)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	obj_tranfs->type = SFS_NUMBER;
+	obj_trans->type.number.this.integer = sscanf("%d", o);
+	return obj_trans;
 }			   
 
 
@@ -935,6 +1023,25 @@ object* string2number (object* o)
 object* symbol2string (object* o)	
 {	
  
+ 	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_SYMBOL)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	obj_tranfs->type = SFS_STRING;
+	obj_trans = sscanf("%s", o);
+	return obj_trans;
 }		    
 
 
@@ -953,4 +1060,23 @@ object* symbol2string (object* o)
 object* string2symbol (object* o)	
 {	
  
+ 	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	if (o->type != SFS_STRING)
+	{
+		WARNING_MSG("Argument invalide");
+		return NULL;
+	}
+	object* obj_tranfs = make_object();
+	obj_tranfs->type = SFS_SYMBOL;
+	obj_trans = sscanf("%s", o);
+	return obj_trans;
 }
