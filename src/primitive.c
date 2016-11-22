@@ -826,8 +826,30 @@ object* islist (object* o)
 	
 	
 object* iseq (object* o)	
-{
-	//------------------------A FAIRE
+{	
+	if (o == obj_empty_list)
+	{ 
+		WARNING_MSG("Pas assez d'arguments - min 1");
+		return NULL;
+	}
+	if ((cdr(o))!= obj_empty_list)
+	{
+		WARNING_MSG("Trop d'arguments - max=2");
+		return NULL;
+	}
+	object* obj_eq = make_object();
+	if(car(o)->type == car(cdr(o))->type)
+	{
+		if (   )//valeur de car(o) == valeur de car(cdr(o))
+		{
+			obj_eq = obj_true;
+			return obj_eq;
+		}
+		else
+		{
+			obj_eq = obj_false;
+			return obj_eq;
+		}
 }		    
 		    
 		    
