@@ -4,7 +4,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 (define a -9)
-
 (+ 3 4)
 (+ 3)
 (+)
@@ -12,7 +11,6 @@
 (* 4)
 (*)
 (* 6 a)
-
 (- 3 4)
 (- 3 4 5)
 (- 3)
@@ -24,15 +22,10 @@
 (abs -7)
 (abs a)
 
-(modulo 13 4)
 (remainder 13 4)
-(modulo -13 4)
 (remainder -13 4)
-(modulo 13 -4)
 (remainder 13 -4)
-(modulo -13 -4)
 (remainder -13 -4)
-(modulo a 2)
 (remainder a 2)
 
 (= 1 1)
