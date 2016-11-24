@@ -39,7 +39,7 @@ object* test_symb(object* o){
 	object* m;
 	object* s;
 
-	m = car(obj_meta);
+	m = car(obj_current);
 
 	do{
 		if (car(car(m))->type == SFS_SYMBOL){
@@ -66,19 +66,28 @@ object* test_symb(object* o){
 	return s;
 }
 
-uint test_primitive(object* o){
-	return 0xFF;
-}
+/**
+*@fn object* forme(object* o, uint tst_form, object* obj_meta)
+*
+*@brief Lien à travers un switch entre les adresses les fonction C des formes.
+*
+*@param object* o pointeur vers un objet de type pair dont le car est une forme connu.
+*@param uint tst_form entier contenant "l'adresse" de la forme.
+*@param object* obj_meta pointeur vers un objet dont le cdr.
+*/
 
-
-
-void ajout_tete(object* cdr, object** p_stack_cdr){/*servait dans une première ebauche de eval*/
-	object* o = make_object();
-	o->type = SFS_PAIR;
-	o->this.pair.cdr = *(p_stack_cdr);
-	o->this.pair.car = cdr;
-	*(p_stack_cdr) = o;
-	return;
+object* all_symb(object* o, object* tst_form){
+	switch (tst_form->type){
+	case SFS_ADRESS_FORME:
+		return (*(tst_form->this.fct))(o);
+		break;
+	case SFS_ADRESS_PRIM:
+		return (*tst_form->this.fct)(eval_prim(cdr(o)));
+	default:
+		printf("Forme inconnue erreur\n");
+		return NULL;
+		break;
+	}
 }
 
 object* supr_tete(object** p_stack_cdr){/*servait dans une première ebauche de eval*/
@@ -99,6 +108,18 @@ void ajout_tete_env(object* o, object* env){
 	env->this.pair.car = obj;
 }
 
+object* eval_prim(object* o){
+	if (o->type == SFS_PAIR){
+		object* obj_pair = make_object();
+		obj_pair->type = SFS_PAIR;
+		obj_pair->this.pair.car = sfs_eval(car(o));
+		obj_pair->this.pair.cdr = eval_prim(cdr(o));
+		return obj_pair;
+	}
+	if (test_auto_eval(o)){ return o; }
+	if (o == obj_empty_list){ return o; }
+	return NULL; /*erreur*/
+}
 
 object* sfs_eval(object * input){
 
@@ -125,12 +146,12 @@ object* sfs_eval(object * input){
 		else{WARNING_MSG("Car de la liste n'est pas une fonction");}
 		return NULL;
 	}
-	if (cdr(tst_symb)->type == SFS_ADRESS){
+	if (cdr(tst_symb)->type == SFS_ADRESS_PRIM || cdr(tst_symb)->type == SFS_ADRESS_FORME){
 		if(atm){
 			WARNING_MSG("Expression invalide pour %s", obj->this.symbol);
 			return NULL;
 		}
-		return forme(input, cdr(tst_symb)->this.adress, obj_meta);			
+		return all_symb(input, cdr(tst_symb));			
 	}
 	else{ 
 		return obj_cpy(cdr(tst_symb));
