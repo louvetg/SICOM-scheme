@@ -69,7 +69,12 @@ void sfs_print_pair(object* o) {
 	if (SFS_NIL == o->this.pair.car->type){ printf("(");}
 	sfs_print_b(o->this.pair.car);
 	if(o->this.pair.cdr->type != SFS_NIL){printf(" ");}
-	sfs_print_b(o->this.pair.cdr);
+	if (o->this.pair.cdr->type != SFS_PAIR){ 
+		printf(". "); 
+		sfs_print_b(o->this.pair.cdr);
+		printf(")");
+	}
+	else(sfs_print_b(o->this.pair.cdr));
 	return;
 }
 
