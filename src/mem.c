@@ -32,11 +32,11 @@ object * init_meta_environnement(){
 }
 
 object * init_curr_environnement(){
-	obj_meta = make_object();
-	obj_meta->type = SFS_PAIR;
-	obj_meta->this.pair.car = obj_empty_list;
-	obj_meta->this.pair.cdr = obj_meta;
-	return obj_meta;
+	obj_current = make_object();
+	obj_current->type = SFS_PAIR;
+	obj_current->this.pair.car = obj_empty_list;
+	obj_current->this.pair.cdr = obj_meta;
+	return obj_current;
 }
 
 object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, object* (*forme[NB_FORM])(object*), char tab_prim[NB_PRIM][STRLEN], object* (*prim[NB_PRIM])(object*)){
@@ -79,7 +79,7 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, object*
 		pair_symb[i]->this.pair.car = symb[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */	
 		pair_symb[i]->this.pair.cdr = add[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
 
-		DEBUG_MSG("%d_Creation memoire de %s ayant pour adresse %p\n", i, pair_symb[i]->this.pair.car->this.symbol, pair_symb[i]->this.pair.cdr);
+		DEBUG_MSG("%d_Creation memoire de %s ayant pour adresse %p", i, pair_symb[i]->this.pair.car->this.symbol, pair_symb[i]->this.pair.cdr);
 
 		list_pair_symb[i]->type = SFS_PAIR;
 		list_pair_symb[i]->this.pair.car = pair_symb[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
@@ -102,7 +102,7 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, object*
 		pair_symb[i]->this.pair.car = symb[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
 		pair_symb[i]->this.pair.cdr = add[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */
 
-		DEBUG_MSG("%d_Creation memoire de %s ayant pour adresse %p\n", i, pair_symb[i]->this.pair.car->this.symbol, pair_symb[i]->this.pair.cdr);
+		DEBUG_MSG("%d_Creation memoire de %s ayant pour adresse %p", i, pair_symb[i]->this.pair.car->this.symbol, pair_symb[i]->this.pair.cdr);
 
 		list_pair_symb[i]->type = SFS_PAIR;
 		list_pair_symb[i]->this.pair.car = pair_symb[i]; /* soucis de mémoire - diagnostique valgrind - à essayer de traiter */

@@ -69,9 +69,11 @@ int main ( int argc, char *argv[] ) {
     
     char tab_form[NB_FORM][STRLEN];
     object* (*forme[NB_FORM])(object*);
+    
 
     char tab_prim[NB_PRIM][STRLEN];
     object* (*prim[NB_PRIM])(object*);
+    int ind; for(ind = 0; ind < NB_PRIM; ind++){memset(tab_prim[ind], '\0' ,STRLEN);}
 
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */

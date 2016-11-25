@@ -38,32 +38,39 @@ object* test_symb(object* o){
 	int cond = 1;
 	object* m;
 	object* s;
+	object* obj = obj_current;
 
-	m = car(obj_current);
-
+	
 	do{
-		if (car(car(m))->type == SFS_SYMBOL){
-		DEBUG_MSG("Symbole stocké en mémoire: %s ",car(car(m))->this.symbol);
-			if (strcmp(car(car(m))->this.symbol, o->this.symbol) == 0){
-				cond = 0;
-				s = car(m);
-			}
+		m = car(obj);
+		cond = 1;
+		DEBUG_MSG("Environnement d'adresse: %p", obj);
+		if(m != obj_empty_list){
+			do{
+				if (car(car(m))->type == SFS_SYMBOL){
+					DEBUG_MSG("Symbole stocké en mémoire: %s ",car(car(m))->this.symbol);
+					if (strcmp(car(car(m))->this.symbol, o->this.symbol) == 0){
+						s = car(m);
+						goto fin;
+					}
+				}
+				else{
+					DEBUG_MSG("L'element stocke n'est pas de type symbole ");
+				}
+				if (cdr(m) == obj_empty_list && cond == 1){
+					cond = 0;
+				}
+				m = cdr(m);
+
+
+			} while (cond);
 		}
-		else{
-			DEBUG_MSG("L'element stocke n'est pas de type symbole ");
-		}
-		if (cdr(m) == obj_empty_list && cond == 1){
-			cond = 0;
-			end = 1;
-		}
-		m = cdr(m);
+		obj = cdr(obj);
+	}while(obj != obj_empty_list);
 
+	return NULL;
 
-	} while (cond);
-
-	if (end){ return NULL; }
-
-	return s;
+fin:	return s;
 }
 
 /**

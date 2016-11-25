@@ -22,9 +22,9 @@ extern "C" {
 
 
 
-#define STRLEN      /* 256*/  65536 
+#define STRLEN     256
 #define BIGSTRING 65536
-#define TEMPON	/*256 */  65536
+#define TEMPON	256
 
 
 #define TRUE    1
