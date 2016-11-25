@@ -3,8 +3,8 @@
 ; TEST_COMMENT= test equiv polymorphique
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
-(eq? '(a) '(a))
-(eq? "a" "a")
-(eq? "" "")
-(eq? 2 2)
+(eq? )
+(eq? 1)
+
+
 
