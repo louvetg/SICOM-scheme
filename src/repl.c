@@ -162,7 +162,7 @@ int main ( int argc, char *argv[] ) {
             continue ;
         }
 	DEBUG_MSG("-------read done-------");
-        output = sfs_eval( sexpr );
+        output = sfs_eval( sexpr , obj_current);
         if( NULL == output) {
             /* si fichier alors on sort*/
             if (mode == SCRIPT) {

@@ -113,7 +113,7 @@ object* eval_prim(object* o){
 	if (o->type == SFS_PAIR){
 		object* obj_pair = make_object();
 		obj_pair->type = SFS_PAIR;
-		obj_pair->this.pair.car = sfs_eval(car(o));
+		obj_pair->this.pair.car = sfs_eval(car(o),obj_current);
 		if(obj_pair->this.pair.car == NULL){return NULL;}
 		obj_pair->this.pair.cdr = eval_prim(cdr(o));
 		if(obj_pair->this.pair.cdr == NULL){return NULL;}
@@ -124,14 +124,16 @@ object* eval_prim(object* o){
 	return NULL; /*erreur*/
 }
 
-object* sfs_eval(object * input){
-
+object* sfs_eval(object * input, object * evmt){
+	object * mem_evmt = obj_current;
+	obj_current = evmt;
 	object* obj = input;
 	uint atm = 1;
 
 
 	uint tst_auto = test_auto_eval(obj);
 		if (tst_auto != 0xFF){
+			obj_current = mem_evmt;
 			return input;
 		}
 	
@@ -144,20 +146,27 @@ object* sfs_eval(object * input){
 	if (tst_symb == NULL){
 		if(atm){
 			WARNING_MSG("%s, n'est pas stocké en mémoire", obj->this.symbol);
+			obj_current = mem_evmt;
 			return NULL;
 		}
 		else{WARNING_MSG("Car de la liste n'est pas une fonction");}
+		obj_current = mem_evmt;
 		return NULL;
 	}
 	if (cdr(tst_symb)->type == SFS_ADRESS_PRIM || cdr(tst_symb)->type == SFS_ADRESS_FORME){
 		if(atm){
 			WARNING_MSG("Expression invalide pour %s", obj->this.symbol);
+			obj_current = mem_evmt;
 			return NULL;
 		}
-		return all_symb(input, cdr(tst_symb));			
+		object* result = all_symb(input, cdr(tst_symb));
+		obj_current = mem_evmt; 
+		return result; 			
 	}
 	else{ 
-		return cdr(tst_symb);
+		object* result = cdr(tst_symb);
+		obj_current = mem_evmt;
+		return result;
 	}
 
 }

@@ -19,13 +19,12 @@ extern "C" {
 #include "object.h"
 
 object* eval_prim(object* o);
-object* sfs_eval( object* );
 object* car(object * o);
 object* cdr(object * o);
 uint test_auto_eval(object* o);
 object* test_symb(object* o);
 uint test_primitive(object* o);
-object* sfs_eval(object * o);
+object* sfs_eval(object * o, object* evmt);
 void ajout_tete(object* , object** );
 object* supr_tete(object**);
 void ajout_tete_env(object* o, object* env);

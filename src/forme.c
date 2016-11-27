@@ -55,7 +55,7 @@ object* define(object* o){
 
 	object* obj_cdr = make_object();
 	obj_cdr = car(cdr(cdr(o)));
-	obj_cdr = sfs_eval(obj_cdr);
+	obj_cdr = sfs_eval(obj_cdr,obj_current);
 
 	if (obj_cdr == NULL){	
 		return NULL;}
@@ -94,8 +94,8 @@ object* set(object* o){
 	}
 
 	object* val = make_object();
-	val->type = sfs_eval(car(cdr(cdr(o))))->type;
-	val->this = sfs_eval(car(cdr(cdr(o))))->this;
+	val->type = sfs_eval(car(cdr(cdr(o))),obj_current)->type;
+	val->this = sfs_eval(car(cdr(cdr(o))),obj_current)->this;
 	obj->this.pair.cdr = val;
 	return obj_undef;
 }
@@ -153,7 +153,7 @@ object* and(object* o){
 	uint res = 1;
 	uint end = 0;
 	do{
-		object* a = sfs_eval(obj_pair_pred->this.pair.car);
+		object* a = sfs_eval(obj_pair_pred->this.pair.car, obj_current);
 		
 		if (a == obj_false){ res = 0;}
 
@@ -185,7 +185,7 @@ object* or(object* o){
 	uint res = 1;
 	uint end = 0;
 	do{
-		object* a = sfs_eval(obj_pair_pred->this.pair.car);
+		object* a = sfs_eval(obj_pair_pred->this.pair.car, obj_current);
 
 		if (a != obj_false){res = 0;}
 
@@ -201,7 +201,7 @@ object* or(object* o){
 
 object* si(object* o){
 	if (cdr(o) == obj_empty_list){ goto erreur_si; }
-	object* test = sfs_eval(car(cdr(o)));
+	object* test = sfs_eval(car(cdr(o)), obj_current);
 
 	if (cdr(cdr(o)) == obj_empty_list){ goto erreur_si; }
 	object* consequent = car(cdr(cdr(o)));
@@ -218,8 +218,8 @@ object* si(object* o){
 		return NULL; }
 	
 
-	if (test == obj_false){return sfs_eval(alternate);}
-	return sfs_eval(consequent);
+	if (test == obj_false){return sfs_eval(alternate, obj_current);}
+	return sfs_eval(consequent, obj_current);
 	
 erreur_si:
 	WARNING_MSG("if erreur de syntaxe. Synthaxe (if <expression> <tail expression> <tail expression>) ou (if <expression> <tail expression>)");/*Réel syntaxe (and <and>*) à voir pour remplacer*/
