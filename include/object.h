@@ -29,7 +29,7 @@ typedef struct object_t {
         string           strg;
         string           symbol;
 		
-		struct object_t* (*fct)(struct  object_t*);
+	struct object_t* (*fct)(struct  object_t*);
 
         struct pair_t {
             struct object_t *car;
@@ -67,7 +67,6 @@ extern object* obj_meta;
 extern object* obj_undef;
 extern object* obj_current;
 
-object* obj_cpy(object*);
 
 
 

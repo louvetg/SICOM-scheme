@@ -9,7 +9,7 @@ extern "C" {
 #include "object.h"
 #include "eval.h"
 
-#define NB_PRIM 29 /* Attention bien penser à nettoyer la solution si changement */
+#define NB_PRIM 30 /* Attention bien penser à nettoyer la solution si changement */
 
 void init_tab_prim(char tab_form[NB_PRIM][STRLEN]);
 void init_add_tab_prim(object* (*prim[NB_PRIM])(object*));
@@ -43,7 +43,7 @@ object* number2string (object* o);
 object* string2number (object* o);
 object* symbol2string (object* o);
 object* string2symbol (object* o);
-
+object* list (object* o);
 
 
 

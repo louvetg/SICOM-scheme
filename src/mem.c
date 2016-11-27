@@ -50,20 +50,20 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, object*
 
 	symb = calloc(k+j, sizeof(object*));
 	for (i = 0; i < k+j; i++){ 
-		symb[i] = calloc(1, sizeof(object*));
+		symb[i] = calloc(1, sizeof(object));
 		symb[i]->type = SFS_SYMBOL; 
 	}
 
 	add = calloc(k+j, sizeof(object*));
 	for (i = 0; i < k+j; i++){ 
-		add[i] = calloc(1, sizeof(object*));
+		add[i] = calloc(1, sizeof(object));
 	}
 
 	list_pair_symb  = calloc(k+j, sizeof(object*));
-	for (i = 0; i < k+j; i++){ list_pair_symb[i] = calloc(1, sizeof(object*)); }
+	for (i = 0; i < k+j; i++){ list_pair_symb[i] = calloc(1, sizeof(object)); }
 
 	pair_symb = calloc(k+j, sizeof(object*));
-	for (i = 0; i < k+j; i++){ pair_symb[i] = calloc(1, sizeof(object*)); }
+	for (i = 0; i < k+j; i++){ pair_symb[i] = calloc(1, sizeof(object)); }
 
 	for (i = 0; i < k; i++){
 		
@@ -89,7 +89,6 @@ object * init_meta_env(char tab_form[NB_FORM][STRLEN], object* obj_meta, object*
 	}
 
 	for (i = k; i < k+j; i++){
-
 
 		symb[i]->type = SFS_SYMBOL;
 		strcpy(symb[i]->this.symbol, tab_prim[i-k]);

@@ -473,7 +473,7 @@ object* read_atom(char* input, uint* pos){
 			}
 			else {
 				object* obj_chara = make_object();
-				*pos = *pos + 3;
+				*pos = *pos + strlen(chara) + 2;
 				obj_chara = make_chara(chara, obj_chara);
 				return obj_chara;
 			}
@@ -576,15 +576,15 @@ void Verif_Num(char* input, uint pos, char* Num){
 object* make_integer(char* Num, object* obj_Num){
 	char* eptr;
 	if (test_taille_uint(Num) == 2){
-		WARNING_MSG("%ld trop long pour etre stocké. Les entiers inférieur à %d sont stocké comme -inf", strtol(Num, &eptr, 0), INT_MIN);
+		WARNING_MSG("%ld trop long pour etre stocké: Overflow. Limite inférieur: %d", strtol(Num, &eptr, 0), INT_MIN);
 		obj_Num->this.number.this.integer = INT_MIN;
 	}
 	if (test_taille_uint(Num) == 3){
-		WARNING_MSG("%ld trop long pour etre stocké. Les entiers supérieur à %d sont stocké comme +inf", strtol(Num, &eptr, 0), INT_MAX);
+		WARNING_MSG("%ld trop long pour etre stocké: Overflow. Limite supérieur: %d", strtol(Num, &eptr, 0), INT_MAX);
 		obj_Num->this.number.this.integer = INT_MAX;
 	}
 	if (test_taille_uint(Num) == 1){
-		WARNING_MSG("Un entier est supérieur à %d ou inférieur à %d. Il est trop long pour etre lu", LONG_MAX , LONG_MIN);
+		WARNING_MSG("Un entier est supérieur à %ld ou inférieur à %ld. Il est trop long pour etre lu", LONG_MAX , LONG_MIN);
 		return NULL;
 	}
 
@@ -613,8 +613,8 @@ uint test_taille_uint(char* num){
 	char* eptr;
 	long n = strtol(num, &eptr, 0);
 	if (errno == ERANGE){ return 1; }
-	if (n <= INT_MIN){ return 2; }
-	if ( n >= INT_MAX ){ return 3; }
+	if (n < INT_MIN){ return 2; }
+	if ( n > INT_MAX ){ return 3; }
 	else{ return 4; }
 }
 

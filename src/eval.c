@@ -25,6 +25,7 @@ uint test_auto_eval(object* o){
 	if (o->type == SFS_STRING){ return SFS_STRING; }
 	if (o->type == SFS_CHARACTER){ return SFS_CHARACTER; }
 	if (o->type == SFS_UNDEF){ return SFS_UNDEF; }
+	if (o == obj_empty_list){ return SFS_NIL; }
 	return 0xFF;
 }
 
@@ -33,8 +34,6 @@ object* test_symb(object* o){
 	if (o->type != SFS_SYMBOL){ return NULL; }
 	DEBUG_MSG("L'objet est de type symbole");
 
-	uint k = 0;
-	uint end = 0;
 	int cond = 1;
 	object* m;
 	object* s;
@@ -48,7 +47,7 @@ object* test_symb(object* o){
 		if(m != obj_empty_list){
 			do{
 				if (car(car(m))->type == SFS_SYMBOL){
-					DEBUG_MSG("Symbole stocké en mémoire: %s ",car(car(m))->this.symbol);
+					DEBUG_MSG("Symbole stocké en mémoire: %s",car(car(m))->this.symbol);
 					if (strcmp(car(car(m))->this.symbol, o->this.symbol) == 0){
 						s = car(m);
 						goto fin;
@@ -84,27 +83,22 @@ fin:	return s;
 */
 
 object* all_symb(object* o, object* tst_form){
+	object* obj;
 	switch (tst_form->type){
 	case SFS_ADRESS_FORME:
 		return (*(tst_form->this.fct))(o);
 		break;
 	case SFS_ADRESS_PRIM:
-		return (*tst_form->this.fct)(eval_prim(cdr(o)));
+		obj = eval_prim(cdr(o));
+		if(obj == NULL ){return NULL;}
+		return (*tst_form->this.fct)(obj);
+		break;
 	default:
 		printf("Forme inconnue erreur\n");
 		return NULL;
 		break;
 	}
 }
-
-object* supr_tete(object** p_stack_cdr){/*servait dans une première ebauche de eval*/
-	object* o = (*p_stack_cdr)->this.pair.car;
-	object* f = *p_stack_cdr;
-	*p_stack_cdr = (*p_stack_cdr)->this.pair.cdr;
-	free(f);
-	return o;
-}
-
 
 
 void ajout_tete_env(object* o, object* env){
@@ -120,7 +114,9 @@ object* eval_prim(object* o){
 		object* obj_pair = make_object();
 		obj_pair->type = SFS_PAIR;
 		obj_pair->this.pair.car = sfs_eval(car(o));
+		if(obj_pair->this.pair.car == NULL){return NULL;}
 		obj_pair->this.pair.cdr = eval_prim(cdr(o));
+		if(obj_pair->this.pair.cdr == NULL){return NULL;}
 		return obj_pair;
 	}
 	if (test_auto_eval(o)){ return o; }
@@ -161,7 +157,7 @@ object* sfs_eval(object * input){
 		return all_symb(input, cdr(tst_symb));			
 	}
 	else{ 
-		return obj_cpy(cdr(tst_symb));
+		return cdr(tst_symb);
 	}
 
 }

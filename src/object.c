@@ -46,7 +46,7 @@ object* init_undef(){
 	a->type = SFS_UNDEF;
 }
 
-object* obj_cpy(object* o){
+/*object* obj_cpy(object* o){
 	if (o == obj_empty_list){ return obj_empty_list; }
 	if (o == obj_true){ return obj_true; }
 	if (o == obj_false){ return obj_false; }
@@ -65,4 +65,4 @@ object* obj_cpy(object* o){
 		
 	}
 	return obj;
-}
+}*/

@@ -54,7 +54,7 @@ object* define(object* o){
 	strcpy(obj_car->this.symbol, o->this.pair.cdr->this.pair.car->this.symbol) ;
 
 	object* obj_cdr = make_object();
-	obj_cdr = obj_cpy(car(cdr(cdr(o))));
+	obj_cdr = car(cdr(cdr(o)));
 	obj_cdr = sfs_eval(obj_cdr);
 
 	if (obj_cdr == NULL){	
@@ -88,12 +88,11 @@ object* set(object* o){
 		WARNING_MSG("Expression invalide dans le set");
 		return NULL;	
 	}
-	if (cdr(obj)->type == SFS_ADRESS_PRIM || cdr(obj)->type == SFS_ADRESS_PRIM){
+	if (cdr(obj)->type == SFS_ADRESS_PRIM || cdr(obj)->type == SFS_ADRESS_FORME){
 		WARNING_MSG("Ecriture impossible, %s de l'environnement meta est protégé\n",car(obj)->this.symbol);
 		return NULL;
 	}
 
-	free(obj->this.pair.cdr);
 	object* val = make_object();
 	val->type = sfs_eval(car(cdr(cdr(o))))->type;
 	val->this = sfs_eval(car(cdr(cdr(o))))->this;

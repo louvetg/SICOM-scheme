@@ -2,7 +2,6 @@
 #include <limits.h>
 
 
-
 /**
 *@fn void init_tab_form(char tab_form[NB_FORM][STRLEN])
 *
@@ -35,12 +34,13 @@ void init_tab_prim(char tab_form[NB_PRIM][STRLEN]){
 	strcpy(tab_form[20], "set-cdr!");
 	strcpy(tab_form[21], "list?");
 	strcpy(tab_form[22], "eq?");
-	strcpy(tab_form[23], "char2integer");
+	strcpy(tab_form[23], "char->integer");
 	strcpy(tab_form[24], "integer->char");
 	strcpy(tab_form[25], "number->string");
 	strcpy(tab_form[26], "string->symbol");
 	strcpy(tab_form[27], "symbol->string");
 	strcpy(tab_form[28], "string->number");
+	strcpy(tab_form[29], "list");
 }
 
 /**
@@ -82,6 +82,7 @@ void init_add_tab_prim(object* (*prim[NB_PRIM])(object*)){
 	prim[26] = *string2symbol;
 	prim[27] = *symbol2string;
 	prim[28] = *string2number;
+	prim[29] = *list;
 }
 
 
@@ -112,7 +113,7 @@ object* moins (object* o){
     }
 	if (cdr(o) == obj_empty_list) 
 	{
-		obj_sous= - car(o)->this.number.this.integer;
+		obj_sous->this.number.this.integer= - car(o)->this.number.this.integer;
 		return obj_sous;
 	}
 	else
@@ -134,7 +135,7 @@ object* moins (object* o){
         o = cdr(o);
         while (cdr(o) != obj_empty_list)
         {
-            if(car(cdr(o)) != SFS_NUMBER)
+            if(car(cdr(o))->type != SFS_NUMBER)
             {
                 WARNING_MSG("Au moins un argument non entier");
                 return NULL;
@@ -179,7 +180,7 @@ object* plus (object* o){
 	obj_somme->this.number.this.integer = 0;
 	do
 	{
-        	if(car(o) != SFS_NUMBER)
+        	if(car(o)-> type != SFS_NUMBER)
        		 {
           	 	WARNING_MSG("Au moins un argument non entier");
             	 	return NULL;
@@ -265,7 +266,7 @@ object* quotient (object* o){
 		WARNING_MSG("Pas assez d'arguments - min 1");
 		return NULL;
 	}
-	if(car(o)->this.number.this.integer = 0)
+	if(car(o)->this.number.this.integer == 0)
     	{
         	WARNING_MSG("Division par 0");
         	return NULL;
@@ -273,29 +274,33 @@ object* quotient (object* o){
 	object* obj_divis = make_object();
 	obj_divis->type = SFS_NUMBER;
 	obj_divis->this.number.this.integer = 1;
-   	if((car(o)->type != SFS_NUMBER)||(car(cdr(o))->type != SFS_NUMBER))
+   	if(car(o)->type != SFS_NUMBER)
     	{
-         	WARNING_MSG("Au moins un argument non entier");
+        	WARNING_MSG("Au moins un argument non entier");
          	return NULL;
     	}
 	if(cdr(o) == obj_empty_list)
 	{
-        	obj_divis->this.number.this.integer = obj_divis->this.number.this.integer/ car(o)->this.number.this.integer;
+        	obj_divis->this.number.this.integer = obj_divis->this.number.this.integer / car(o)->this.number.this.integer;
 		return obj_divis;
 	}
 	else
 	{
-		obj_divis->this.number.this.integer = car(o)->this.number.this.integer/ car(cdr(o))->this.number.this.integer;
+		if(car(cdr(o))->type != SFS_NUMBER){
+			WARNING_MSG("Au moins un argument non entier");
+			return NULL;
+		}
+		obj_divis->this.number.this.integer = car(o)->this.number.this.integer / car(cdr(o))->this.number.this.integer;
 		o = cdr(o);
 		while (cdr(o) != obj_empty_list)
 		{
 			
-			if(obj_divis->this.number.this.integer  == 0)
+			if(car(o)->this.number.this.integer  == 0)
 			{
 				WARNING_MSG("Division par 0"); 
 				return NULL;
 			}
-			if(car(o) != SFS_NUMBER)
+			if(car(o)->type != SFS_NUMBER)
             		{
                			 WARNING_MSG("Au moins un argument non entier");
                 		 return NULL;
@@ -601,7 +606,7 @@ object* issymbol (object* o){
 		{
 			obj_res=obj_false;
 			return obj_res;
-		}
+		};
 	}while (o != obj_empty_list);
 	return obj_res;
 }
@@ -868,16 +873,16 @@ object* setcar (object* o)
 		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
 	}
-	if (( car(o)->type != SFS_PAIR )||(car(cdr(o))-> type != SFS_NUMBER))
-	{
-		WARNING_MSG("set-car! ne s'applique pas à votre argument");
+	if (cdr(cdr(o)) != obj_empty_list){
+		WARNING_MSG("Trop d'arguments - max 3");
 		return NULL;
 	}
-	object* obj_setcar = make_object();
-	obj_setcar->type = SFS_PAIR;
-	obj_setcar->this.pair.car= cdr(cdr(o))->this.number.this.integer;
-	obj_setcar->this.pair.cdr= cdr(car(o))->this.number.this.integer;
-	return obj_setcar;
+	if(car(o)->type != SFS_PAIR){
+		WARNING_MSG("L'objet stocké n'est pas de type pair");
+		return NULL;
+	}
+	car(o)->this.pair.car = car(cdr(o));
+	return obj_undef;	
 }
 
 
@@ -898,16 +903,16 @@ object* setcdr (object* o)
 		WARNING_MSG("Pas assez d'arguments - min 2");
 		return NULL;
 	}
-	if (( car(o)->type != SFS_PAIR )||(car(cdr(o))-> type != SFS_NUMBER))
-	{
-		WARNING_MSG("set-car! ne s'applique pas à votre argument");
+	if (cdr(cdr(o)) != obj_empty_list){
+		WARNING_MSG("Trop d'arguments - max 3");
 		return NULL;
 	}
-	object* obj_setcdr = make_object();
-	obj_setcdr->type = SFS_PAIR;
-	obj_setcdr->this.pair.car= car(car(o))->this.number.this.integer;
-	obj_setcdr->this.pair.cdr= cdr(o)->this.number.this.integer;
-	return obj_setcdr;
+	if(car(o)->type != SFS_PAIR){
+		WARNING_MSG("L'objet stocké n'est pas de type pair");
+		return NULL;
+	}
+	car(o)->this.pair.cdr = car(cdr(o));
+	return obj_undef;	
 }
 
 
@@ -962,18 +967,37 @@ object* iseq (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	object* obj_eq = make_object();
-	if(car(o)->type == car(cdr(o))->type)
-	{
-		if ( (car(o)->this.number.this.integer==car(cdr(o))->this.number.this.integer))
-			obj_eq = obj_true;
-			return obj_eq;
-        }
-        else
-		{
-			obj_eq = obj_false;
-			return obj_eq;
-		}
+	object* a = car(o);
+	object* b = car(cdr(o));
+ 
+	if( a->type != b->type){return obj_false;}
+	
+	switch(a->type){
+	case SFS_PAIR:
+		if(a == b){return obj_true;}
+		else{return obj_false;}
+		break;
+	case SFS_CHARACTER:
+		if(car(a)->this.character == car(cdr(a))->this.character){return obj_true;}
+		else{return obj_false;}
+		break;
+	case SFS_SYMBOL:
+		if(strcmp(a->this.symbol,b->this.symbol) == 0){return obj_true;}
+		else{return obj_false;}
+		break;
+	case SFS_NUMBER:
+		if(car(a)->this.number.this.integer == car(b)->this.number.this.integer){return obj_true;}
+		else{return obj_false;} 
+		break;
+	case SFS_STRING:
+		if(strcmp(a->this.strg,b->this.symbol) == 0){return obj_true;}
+		else{return obj_false;}
+		break;
+	case SFS_BOOLEAN:
+		if(a == b){return obj_true;}
+		else{return obj_false;}
+		break;
+	}
 }
 
 
@@ -1004,14 +1028,14 @@ object* char2integer (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_CHARACTER)
+	if (car(o)->type != SFS_CHARACTER)
 	{
 		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
 	obj_tranfs->type = SFS_NUMBER;
-	obj_tranfs->this.number.this.integer = sscanf("%d", o);
+	obj_tranfs->this.number.this.integer = (car(o)->this.character) ;
 	return obj_tranfs;
 }
 
@@ -1040,21 +1064,21 @@ object* integer2char (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_NUMBER)
+	if (car(o)->type != SFS_NUMBER)
 	{
-		WARNING_MSG("Argument depart mauvais type");
+		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
 	obj_tranfs->type = SFS_CHARACTER;
-	if (car(o) <126 || car(o) >0)
+	if (car(o)->this.number.this.integer <= 126 && car(o)->this.number.this.integer > 0)
 	{
-		obj_tranfs->this.character= sscanf("%d", o->this.number.this.integer);
+		obj_tranfs->this.character = car(o)->this.number.this.integer;
 		return obj_tranfs;
 	}
 	else
 	{
-		WARNING_MSG("Argument invalide");
+		WARNING_MSG("Entier ne faisant pas partie de la table ascii (doit être compris entre 0 et 126");
 		return NULL;
 	}
 }
@@ -1085,14 +1109,14 @@ object* number2string (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_NUMBER)
+	if (car(o)->type != SFS_NUMBER)
 	{
 		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
 	obj_tranfs->type = SFS_STRING;
-	obj_tranfs = sscanf("%d", o->this.number.this.integer);
+	sprintf(obj_tranfs->this.strg,"%d", car(o)->this.number.this.integer);
 	return obj_tranfs;
 }
 
@@ -1112,6 +1136,7 @@ object* number2string (object* o)
 
 object* string2number (object* o)
 {
+	char* eptr;
  	if (o == obj_empty_list)
 	{
 		WARNING_MSG("Pas assez d'arguments - min 1");
@@ -1122,14 +1147,20 @@ object* string2number (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_STRING)
+	if (car(o)->type != SFS_STRING)
 	{
 		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
 	obj_tranfs->type = SFS_NUMBER;
-	obj_tranfs->this.number.this.integer = sscanf("%d", o);
+	
+	int a = strtol(car(o)->this.strg, &eptr, 0);
+	if(a == 0 && (car(o)->this.strg)[0] != '0'){
+		WARNING_MSG("La chaine de charactère ne contient pas que un nombre.");
+		return NULL;
+	}
+	obj_tranfs->this.number.this.integer = a;
 	return obj_tranfs;
 }
 
@@ -1160,14 +1191,14 @@ object* symbol2string (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_SYMBOL)
+	if (car(o)->type != SFS_SYMBOL)
 	{
 		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
 	obj_tranfs->type = SFS_STRING;
-	obj_tranfs = sscanf("%s", o);
+	strcpy(obj_tranfs->this.strg, car(o)->this.symbol);
 	return obj_tranfs;
 }
 
@@ -1195,14 +1226,37 @@ object* string2symbol (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	if (o->type != SFS_STRING)
+	if (car(o)->type != SFS_STRING)
 	{
 		WARNING_MSG("Argument invalide");
 		return NULL;
 	}
 	object* obj_tranfs = make_object();
+	int k = strlen(car(o)->this.strg);
+	int i;
+	for (i = 0; i<k; i++){ 
+		if( isdigit((car(o)->this.strg)[0]) || (car(o)->this.strg)[i] == ' '){
+			WARNING_MSG("Chaine de charactère non convertible");
+			return NULL;
+		}
+	} 
 	obj_tranfs->type = SFS_SYMBOL;
-	obj_tranfs->type = sscanf("%c", o);
+	strcpy(obj_tranfs->this.symbol,car(o)->this.strg);
 	return obj_tranfs;
 }
 
+
+/**
+*@fn object* string2symbol (object* o)
+*
+*@brief
+*
+*@param object* o pointeur vers la structure étudiée
+*
+*@return object o* retourne l'expression passée dans la fonction
+**/
+
+object* list(object* o)
+{
+	return o; 
+}

@@ -19,7 +19,8 @@
  *
  *@param object* Objet contenant l'atome à afficher
  *
- * */
+ *
+ */
  
 void sfs_print_atom(object* o) {
 	if (o->type == SFS_BOOLEAN){
@@ -33,19 +34,8 @@ void sfs_print_atom(object* o) {
 	}
 	if (o->type == SFS_NIL){ printf(")"); }
 	if (o->type == SFS_NUMBER){ 
-		switch (o->this.number.this.integer){
-		case INT_MAX:
-			printf("+inf");
-			break;
-
-		case INT_MIN:
-			printf("-inf");
-			break;
-		default:
-			printf("%d",o->this.number.this.integer);
-			break;
-		}
-	 }
+		printf("%d",o->this.number.this.integer);
+	}
 	if (o->type == SFS_STRING){ printf("\"%s\"", o->this.strg); }
 	if (o->type == SFS_SYMBOL){ printf("%s", o->this.strg); }
 	if (o->type == SFS_UNDEF){ printf("#<undef>"); }
@@ -69,7 +59,7 @@ void sfs_print_pair(object* o) {
 	if (SFS_NIL == o->this.pair.car->type){ printf("(");}
 	sfs_print_b(o->this.pair.car);
 	if(o->this.pair.cdr->type != SFS_NIL){printf(" ");}
-	if (o->this.pair.cdr->type != SFS_PAIR){ 
+	if (o->this.pair.cdr->type != SFS_PAIR && o->this.pair.cdr != obj_empty_list){ 
 		printf(". "); 
 		sfs_print_b(o->this.pair.cdr);
 		printf(")");
