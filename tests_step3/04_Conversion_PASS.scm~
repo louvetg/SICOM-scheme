@@ -3,7 +3,7 @@
 ; TEST_COMMENT= test Conversion
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
-;(integer->char 1)
+(integer->char 1)
 (integer->char 36)
 (integer->char 126)
 
@@ -13,7 +13,7 @@
 
 (string->number "1")
 (string->number "128")
-;(string->number "1.92")
+(string->number "1.92")
 
 (number->string 1)
 (number->string 128)

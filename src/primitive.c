@@ -516,7 +516,7 @@ object* fabs (object* o){
 	}
 	else
 	{
-		return o;
+		return car(o);
 	}
 }
 
@@ -532,7 +532,7 @@ object* fabs (object* o){
 **/
 
 object* isnull (object* o){
-	if (o == obj_empty_list)
+	if (car(o) == obj_empty_list)
 	{
 		return obj_true;
 	}
@@ -815,10 +815,12 @@ object* fcar (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	object* obj_car = make_object();
-	obj_car->type = o->type;
-	obj_car=car(car(o));
-	return obj_car;
+	if( car(o)->type != SFS_PAIR)
+	{
+		WARNING_MSG("L'argument doit être de type pair");
+		return NULL;
+	}
+	return car(car(o));
 }
 
 
@@ -846,10 +848,12 @@ object* fcdr (object* o)
 		WARNING_MSG("Trop d'arguments - max=2");
 		return NULL;
 	}
-	object* obj_cdr = make_object();
-	obj_cdr->type = o->type;
-	obj_cdr=cdr(car(o));
-	return obj_cdr;
+	if( car(o)->type != SFS_PAIR)
+	{
+		WARNING_MSG("L'argument doit être de type pair");
+		return NULL;
+	}
+	return cdr(car(o));
 }
 
 
@@ -978,7 +982,7 @@ object* iseq (object* o)
 		else{return obj_false;}
 		break;
 	case SFS_CHARACTER:
-		if(car(a)->this.character == car(cdr(a))->this.character){return obj_true;}
+		if(a->this.character == b->this.character){return obj_true;}
 		else{return obj_false;}
 		break;
 	case SFS_SYMBOL:
@@ -986,7 +990,7 @@ object* iseq (object* o)
 		else{return obj_false;}
 		break;
 	case SFS_NUMBER:
-		if(car(a)->this.number.this.integer == car(b)->this.number.this.integer){return obj_true;}
+		if(a->this.number.this.integer == b->this.number.this.integer){return obj_true;}
 		else{return obj_false;} 
 		break;
 	case SFS_STRING:
@@ -996,6 +1000,9 @@ object* iseq (object* o)
 	case SFS_BOOLEAN:
 		if(a == b){return obj_true;}
 		else{return obj_false;}
+		break;
+	case  SFS_NIL:
+		return obj_true;
 		break;
 	}
 }

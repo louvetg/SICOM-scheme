@@ -123,10 +123,7 @@ object* quote(object* o){
 		o->this.pair.cdr = cdr(car(o->this.pair.cdr));
 	}
 	else{ /* Cas d'un atome */
-		object* p = make_object();
-		p->type = car(cdr(o))->type;
-		p->this = car(cdr(o))->this;
-		return p;
+		return car(cdr(o));
 	}
 	
 

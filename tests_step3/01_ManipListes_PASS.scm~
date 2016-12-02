@@ -19,9 +19,7 @@
 (define pair (cons 1 3))
 pair
 (set-car! pair 4)
-pair
 (set-cdr! pair 6)
-pair
 
 (list 'a (+ 3 4) 'c)
 (list)
