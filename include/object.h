@@ -34,7 +34,13 @@ typedef struct object_t {
         struct pair_t {
             struct object_t *car;
             struct object_t *cdr;
-        }                pair;
+        } pair;
+
+	struct { 
+		struct object_t *param;
+		struct object_t *body;
+		struct object_t *envt;
+	} compound;
 
         struct object_t *special;
 
@@ -57,8 +63,9 @@ object* init_undef();
 #define SFS_BOOLEAN      0x05
 #define SFS_SYMBOL       0x06
 #define SFS_ADRESS_FORME 0x07
-#define SFS_UNDEF		 0x08
+#define SFS_UNDEF	 0x08
 #define SFS_ADRESS_PRIM  0x09
+#define SFS_COMPOUND	 0x0A
 
 extern object* obj_empty_list;
 extern object* obj_true;

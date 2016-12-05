@@ -16,6 +16,7 @@ void init_tab_form(char tab_form[NB_FORM][STRLEN]){
 	strcpy(tab_form[3],"and");
 	strcpy(tab_form[4],"or");
 	strcpy(tab_form[5],"if");
+	strcpy(tab_form[5],"lambda");
 }
 
 /**
@@ -34,6 +35,7 @@ void init_add_tab_form(object* (*forme[NB_FORM])(object*)){
 	forme[3] = *and;
 	forme[4] = *or;
 	forme[5] = *si;
+	forme[6] = *lambda;
 }
 
 
@@ -223,3 +225,23 @@ erreur_si:
 	return NULL; 
 
 }
+object* lambda( object* o){
+/* Vérification de la forme */
+
+/* Creation de l'environement */
+	object* env = make_object();
+	env->type = SFS_PAIR;
+	env->this.pair.car = obj_empty_list;
+	env->this.pair.cdr = obj_current;
+
+/* creation de l'obj comboun */
+	object* obj_lambda = make_object();
+	obj_lambda->type = SFS_COMPOUND;
+	obj_lambda->this.compound.param = car(cdr(o));
+	obj_lambda->this.compound.body = car(cdr(cdr(o)));
+	obj_lambda->this.compound.envt = env;
+	
+	return obj_lambda;	
+}
+
+

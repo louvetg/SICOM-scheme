@@ -9,7 +9,7 @@ extern "C" {
 #include "object.h"
 #include "eval.h"
 
-#define NB_FORM 6 /* Attention bien penser à nettoyer la solution si changement */
+#define NB_FORM 7 /* Attention bien penser à nettoyer la solution si changement */
 
 void init_tab_form(char tab_form[NB_FORM][STRLEN]);
 void init_add_tab_form(object* (*forme[NB_FORM])(object*));
@@ -19,6 +19,7 @@ object* or (object* o);
 object* define(object* o);
 object* set(object* o);
 object* si(object* o);
+object* lambda(object* o);
 
 #ifdef __cplusplus
 }
