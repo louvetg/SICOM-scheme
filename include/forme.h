@@ -9,7 +9,7 @@ extern "C" {
 #include "object.h"
 #include "eval.h"
 
-#define NB_FORM 6
+#define NB_FORM 7
 
 #define QUOTE 0x01
 #define SET 0x02
@@ -17,6 +17,7 @@ extern "C" {
 #define AND 0x04
 #define OR 0x05
 #define IF 0x06
+#define BEGIN 0x07
 
 void init_tab_form(char tab_form[NB_FORM][STRLEN]);
 void init_num_tab_form(uint num_tab_form[NB_FORM]);
@@ -27,7 +28,8 @@ object* or (object* o);
 object* define(object* o, object* obj_meta);
 object* set(object* o, object* obj_meta);
 object* si(object* o);
-
+object* isbegin(object* o);
+  
 #ifdef __cplusplus
 }
 #endif
