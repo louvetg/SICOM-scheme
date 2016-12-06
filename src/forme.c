@@ -15,6 +15,7 @@ void init_tab_form(char tab_form[NB_FORM][STRLEN]){
 	strcpy(tab_form[3],"and");
 	strcpy(tab_form[4],"or");
 	strcpy(tab_form[5],"if");
+	strcpy(tab_form[6],"begin");
 }
 
 /**
@@ -33,6 +34,7 @@ void init_num_tab_form(uint num_tab_form[NB_FORM]){
 	num_tab_form[3] = AND;
 	num_tab_form[4] = OR;
 	num_tab_form[5] = IF;
+	num_tab_form[6] = BEGIN;
 }
 
 /**
@@ -71,6 +73,10 @@ object* forme(object* o, uint tst_form, object* obj_meta){
 		DEBUG_MSG("evaluation de if");
 		return si(o);
 		break;
+	case BEGIN:
+		DEBUG_MSG("evaluation de begin");
+		return isbegin(o);
+		break;	
 	default:
 		DEBUG_MSG("Forme inconnue erreur");
 		return NULL;
@@ -241,6 +247,18 @@ object* or(object* o){
 	return obj_true;
 }
 
+
+/**
+*@fn object* if (object* o)
+*
+*@brief fonction "IF"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* sfs_eval de la conséquence
+*/
+
+
 object* si(object* o){
 	if (cdr(o) == obj_empty_list){ goto erreur_si; }
 	object* test = sfs_eval(car(cdr(o)));
@@ -268,3 +286,29 @@ erreur_si:
 	return NULL; 
 
 }
+
+
+/**
+*@fn object* isbegin (object* o)
+*
+*@brief fonction "BEGIN"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* o résultat de la dernière évaluation
+*/
+
+object* isbegin (object * o)
+{
+	if (o==obj_empty_list)
+	{
+		WARNING_MSG("Pas assez d'arguments");
+		return NULL;
+	}
+	while(cdr(o) != obj_empty_list)
+	{
+		o=cdr(o);
+	}
+	return o;
+}
+		
