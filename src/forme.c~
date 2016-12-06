@@ -90,6 +90,9 @@ object* set(object* o){
 		return NULL;
 	}
 
+	/*object* val = make_object();
+	val->type = sfs_eval(car(cdr(cdr(o))),obj_current)->type;
+	val->this = sfs_eval(car(cdr(cdr(o))),obj_current)->this;*/
 	obj->this.pair.cdr = sfs_eval(car(cdr(cdr(o))),obj_current);
 	return obj_undef;
 }
