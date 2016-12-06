@@ -124,6 +124,19 @@ object* eval_prim(object* o){
 	return NULL; /*erreur*/
 }
 
+object* eval_compound(object* input){
+	object* body = car(input)->this.compound.body;
+	object* envt = car(input)->this.compound.envt;
+	object* param = car(input)->this.compound.param;
+	
+	object* p_current_param = cdr(input);
+	while(p_current_param == obj_empty_list){
+		
+	}
+	sfs_eval(body,envt);	
+}
+
+
 object* sfs_eval(object * input, object * evmt){
 	object * mem_evmt = obj_current;
 	obj_current = evmt;
@@ -137,11 +150,22 @@ object* sfs_eval(object * input, object * evmt){
 			return input;
 		}
 	
-	if (obj->type == SFS_PAIR){
+	if (obj->type == SFS_PAIR){	
+		if(car(obj)-> type ==SFS_PAIR){
+			obj = sfs_eval(car(obj),obj_current);
+			if(obj == NULL){return NULL ; }
+			atm = 0;
+					
+		}
+		else{
 			obj = car(obj);
 			atm = 0;
 		}
+	}
 
+	if( obj->type == SFS_COMPOUND ){
+		return eval_compound(input);
+	}
 	object*  tst_symb = test_symb(obj);
 	if (tst_symb == NULL){
 		if(atm){

@@ -16,7 +16,7 @@ void init_tab_form(char tab_form[NB_FORM][STRLEN]){
 	strcpy(tab_form[3],"and");
 	strcpy(tab_form[4],"or");
 	strcpy(tab_form[5],"if");
-	strcpy(tab_form[5],"lambda");
+	strcpy(tab_form[6],"lambda");
 }
 
 /**
@@ -240,6 +240,16 @@ object* lambda( object* o){
 	obj_lambda->this.compound.param = car(cdr(o));
 	obj_lambda->this.compound.body = car(cdr(cdr(o)));
 	obj_lambda->this.compound.envt = env;
+
+	obj_current = env;
+	object* p_param;
+	
+	while(p_param == obj_empty_list){
+		object* p = calloc(1, sizeof(object));
+		p->type = SFS_PAIR;
+		p->this.pair.car = car(p_parm);
+		p->this.pair.cdr = obj_empty_list; 
+		define(p);
 	
 	return obj_lambda;	
 }
