@@ -17,6 +17,7 @@ void init_tab_form(char tab_form[NB_FORM][STRLEN]){
 	strcpy(tab_form[4],"or");
 	strcpy(tab_form[5],"if");
 	strcpy(tab_form[6],"lambda");
+	strcpy(tab_form[7],"begin");
 }
 
 /**
@@ -36,6 +37,7 @@ void init_add_tab_form(object* (*forme[NB_FORM])(object*)){
 	forme[4] = *or;
 	forme[5] = *si;
 	forme[6] = *lambda;
+	forme[7] = *begin;
 }
 
 
@@ -190,6 +192,18 @@ object* or(object* o){
 	return obj_true;
 }
 
+
+
+/**
+*@fn object* si (object* o)
+*
+*@brief fonction "IF"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* o consequence du predicat selectionné
+*/
+
 object* si(object* o){
 	if (cdr(o) == obj_empty_list){ goto erreur_si; }
 	object* test = sfs_eval(car(cdr(o)), obj_current);
@@ -217,6 +231,20 @@ erreur_si:
 	return NULL; 
 
 }
+
+
+
+/**
+*@fn object* lambda (object* o)
+*
+*@brief fonction "LAMBDA"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* o
+*/
+
+
 object* lambda( object* o){
 /* Vérification de la forme */
 
@@ -251,3 +279,27 @@ object* lambda( object* o){
 }
 
 
+
+/**
+*@fn object* begin (object* o)
+*
+*@brief fonction "BEGIN"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* o valeur évaluée: TRUE ou FALSE
+*/
+
+object* begin (object * o)
+{
+	if (o==obj_empty_list)
+	{
+		WARNING_MSG("Pas assez d'arguments");
+		return NULL;
+	}
+	while(cdr(o) != obj_empty_list)
+	{
+		o=cdr(o);
+	}
+	return o;
+}
