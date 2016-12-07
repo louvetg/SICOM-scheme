@@ -233,16 +233,20 @@ object* lambda( object* o){
 	obj_lambda->this.compound.body = car(cdr(cdr(o)));
 	obj_lambda->this.compound.envt = env;
 
-	obj_current = env;
-	object* p_param;
-	
-/*	while(p_param == obj_empty_list){
-		object* p = calloc(1, sizeof(object));
-		p->type = SFS_PAIR;
-		p->this.pair.car = car(p_param);
-		p->this.pair.cdr = obj_empty_list; 
-		define(p);
-*/	
+	object* p_param = obj_lambda->this.compound.param;
+	DEBUG_MSG("Environnement d'adresse: %p",obj_lambda->this.compound.envt);
+
+	while(p_param != obj_empty_list){
+		
+		object* obj_pair = make_object();
+		obj_pair->type = SFS_PAIR;
+		obj_pair->this.pair.car = car(p_param);
+		obj_pair->this.pair.cdr = obj_empty_list;
+		ajout_tete_env(obj_pair, env);
+		DEBUG_MSG("Création mémoire de %s à l'adresse: %p",obj_pair->this.pair.car->this.symbol, obj_pair);
+		
+		p_param = cdr(p_param);
+	}
 	return obj_lambda;	
 }
 

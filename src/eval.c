@@ -124,18 +124,26 @@ object* eval_prim(object* o){
 	return NULL; /*erreur*/
 }
 
-/*object* eval_compound(object* input){
+object* eval_compound(object* input){
 	object* body = car(input)->this.compound.body;
 	object* envt = car(input)->this.compound.envt;
 	object* param = car(input)->this.compound.param;
-	
-	object* p_current_param = cdr(input);
-	while(p_current_param == obj_empty_list){
+
+	obj_current = envt;	
+	DEBUG_MSG("Environnement d'adresse: %p",envt);
+	object* obj = cdr(input);
+	object* c_param = param;
+	while(obj != obj_empty_list && c_param != obj_empty_list){
 		
+		object* mem = test_symb(car(c_param));
+		mem->this.pair.cdr = sfs_eval(car(obj),obj_current);
+		DEBUG_MSG("Chargement en mémoire du paramètre %s",car(mem)->this.symbol);		
+		obj = cdr(obj);
+		c_param = cdr(c_param);
 	}
-	sfs_eval(body,envt);	
+	return sfs_eval(body,envt);	
 }
-*/
+
 
 object* sfs_eval(object * input, object * evmt){
 	object * mem_evmt = obj_current;
@@ -153,7 +161,11 @@ object* sfs_eval(object * input, object * evmt){
 	if (obj->type == SFS_PAIR){	
 		if(car(obj)-> type ==SFS_PAIR){
 			obj = sfs_eval(car(obj),obj_current);
-			if(obj == NULL){return NULL ; }
+			if(obj == NULL){
+				obj_current = mem_evmt;
+				return NULL ; 
+			}
+			input->this.pair.car = obj;
 			atm = 0;
 					
 		}
@@ -163,9 +175,11 @@ object* sfs_eval(object * input, object * evmt){
 		}
 	}
 
-/*	if( obj->type == SFS_COMPOUND ){
-		return eval_compound(input);
-	}*/
+	if( obj->type == SFS_COMPOUND ){
+		object* ret = eval_compound(input);
+		obj_current = mem_evmt;
+		return ret; 
+	}
 	object*  tst_symb = test_symb(obj);
 	if (tst_symb == NULL){
 		if(atm){
@@ -188,6 +202,12 @@ object* sfs_eval(object * input, object * evmt){
 		return result; 			
 	}
 	else{ 
+		if(cdr(tst_symb)->type == SFS_COMPOUND){
+			input->this.pair.car = cdr(tst_symb);
+			object* ret = eval_compound(input);
+			obj_current = mem_evmt;
+			return ret;
+		}			
 		object* result = cdr(tst_symb);
 		obj_current = mem_evmt;
 		return result;

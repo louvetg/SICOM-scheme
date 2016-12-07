@@ -39,6 +39,7 @@ void sfs_print_atom(object* o) {
 	if (o->type == SFS_STRING){ printf("\"%s\"", o->this.strg); }
 	if (o->type == SFS_SYMBOL){ printf("%s", o->this.strg); }
 	if (o->type == SFS_UNDEF){ printf("#<undef>"); }
+	if (o->type == SFS_COMPOUND){ printf("#<procedure>"); }
 
 	return;
 }
