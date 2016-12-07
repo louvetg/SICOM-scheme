@@ -17,7 +17,7 @@ INCLUDE=-I$(INCDIR)
 CFLAGS=-Wall -ansi $(INCLUDE)
 LFLAGS=-lreadline -lm
 
-CFLAGS_DBG=$(CFLAGS) -g -DDEBUG -Wall -DVERBOSE
+CFLAGS_DBG=$(CFLAGS) -g -DDEBUG -Wall -DVERBOSE 
 CFLAGS_RLS=$(CFLAGS)
 
 SRC=$(wildcard $(SRCDIR)/*.c)

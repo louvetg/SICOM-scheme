@@ -126,20 +126,30 @@ object* eval_prim(object* o){
 
 object* eval_compound(object* input){
 	object* body = car(input)->this.compound.body;
-	object* envt = car(input)->this.compound.envt;
 	object* param = car(input)->this.compound.param;
+	object* apl_envt = car(input)->this.compound.envt;
+/*CREATION DE L'ENVIRONNEMENT*/
 
-	obj_current = envt;	
+	object* envt = make_object();
+	envt->type = SFS_PAIR;
+	envt->this.pair.cdr = apl_envt;
+	envt->this.pair.car = obj_empty_list; 
+
 	DEBUG_MSG("Environnement d'adresse: %p",envt);
+
+	object* p_param = param;
 	object* obj = cdr(input);
-	object* c_param = param;
-	while(obj != obj_empty_list && c_param != obj_empty_list){
+
+	while(obj != obj_empty_list && p_param != obj_empty_list){ 
 		
-		object* mem = test_symb(car(c_param));
-		mem->this.pair.cdr = sfs_eval(car(obj),obj_current);
-		DEBUG_MSG("Chargement en mémoire du paramètre %s",car(mem)->this.symbol);		
-		obj = cdr(obj);
-		c_param = cdr(c_param);
+		object* obj_pair = make_object();
+		obj_pair->type = SFS_PAIR;
+		obj_pair->this.pair.car = car(p_param);
+		obj_pair->this.pair.cdr = sfs_eval(car(obj),envt);
+		ajout_tete_env(obj_pair, envt);
+		DEBUG_MSG("Création mémoire de %s à l'adresse: %p",obj_pair->this.pair.car->this.symbol, obj_pair);
+		
+		p_param = cdr(p_param);
 	}
 	return sfs_eval(body,envt);	
 }

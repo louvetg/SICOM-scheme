@@ -219,34 +219,15 @@ erreur_si:
 }
 object* lambda( object* o){
 /* Vérification de la forme */
-
-/* Creation de l'environement */
-	object* env = make_object();
-	env->type = SFS_PAIR;
-	env->this.pair.car = obj_empty_list;
-	env->this.pair.cdr = obj_current;
+	
 
 /* creation de l'obj comboun */
 	object* obj_lambda = make_object();
 	obj_lambda->type = SFS_COMPOUND;
 	obj_lambda->this.compound.param = car(cdr(o));
 	obj_lambda->this.compound.body = car(cdr(cdr(o)));
-	obj_lambda->this.compound.envt = env;
-
-	object* p_param = obj_lambda->this.compound.param;
-	DEBUG_MSG("Environnement d'adresse: %p",obj_lambda->this.compound.envt);
-
-	while(p_param != obj_empty_list){
-		
-		object* obj_pair = make_object();
-		obj_pair->type = SFS_PAIR;
-		obj_pair->this.pair.car = car(p_param);
-		obj_pair->this.pair.cdr = obj_empty_list;
-		ajout_tete_env(obj_pair, env);
-		DEBUG_MSG("Création mémoire de %s à l'adresse: %p",obj_pair->this.pair.car->this.symbol, obj_pair);
-		
-		p_param = cdr(p_param);
-	}
+	obj_lambda->this.compound.envt = obj_current;
+	DEBUG_MSG(" environement stocké: %p",obj_current);
 	return obj_lambda;	
 }
 
