@@ -128,6 +128,7 @@ object* eval_compound(object* input){
 	object* body = car(input)->this.compound.body;
 	object* param = car(input)->this.compound.param;
 	object* apl_envt = car(input)->this.compound.envt;
+	object* ret;
 /*CREATION DE L'ENVIRONNEMENT*/
 
 	object* envt = make_object();
@@ -144,14 +145,25 @@ object* eval_compound(object* input){
 		
 		object* obj_pair = make_object();
 		obj_pair->type = SFS_PAIR;
-		obj_pair->this.pair.car = car(p_param);
-		obj_pair->this.pair.cdr = sfs_eval(car(obj),envt);
+		if(cdr(p_param)->type != SFS_PAIR && cdr(obj) != obj_empty_list){
+			obj_pair->this.pair.car = car(p_param);
+			obj_pair->this.pair.cdr = make_list(obj);	
+		}
+		else{
+			obj_pair->this.pair.car = car(p_param);
+			obj_pair->this.pair.cdr = sfs_eval(car(obj),envt);
+		}
 		ajout_tete_env(obj_pair, envt);
 		DEBUG_MSG("Création mémoire de %s à l'adresse: %p",obj_pair->this.pair.car->this.symbol, obj_pair);
 		
 		p_param = cdr(p_param);
+		obj = cdr(obj);
 	}
-	return sfs_eval(body,envt);	
+	while( body != obj_empty_list ){
+		ret = sfs_eval(car(body),envt);
+		body = cdr(body);
+	}
+	return ret;	
 }
 
 
@@ -222,5 +234,17 @@ object* sfs_eval(object * input, object * evmt){
 		obj_current = mem_evmt;
 		return result;
 	}
+
+}
+
+
+object* make_list(object* obj){
+	if( obj == obj_empty_list){return obj_empty_list;}
+	object* p = make_object() ;
+	p->type = SFS_PAIR;
+	p->this.pair.car = sfs_eval(car(obj),obj_current); 
+	p->this.pair.cdr = make_list(cdr(obj));
+	return p;
+
 
 }

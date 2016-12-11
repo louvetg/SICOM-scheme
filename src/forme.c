@@ -17,6 +17,9 @@ void init_tab_form(char tab_form[NB_FORM][STRLEN]){
 	strcpy(tab_form[4],"or");
 	strcpy(tab_form[5],"if");
 	strcpy(tab_form[6],"lambda");
+	strcpy(tab_form[7],"begin");
+	strcpy(tab_form[8],"let");
+	strcpy(tab_form[9],"let*");
 }
 
 /**
@@ -36,6 +39,9 @@ void init_add_tab_form(object* (*forme[NB_FORM])(object*)){
 	forme[4] = *or;
 	forme[5] = *si;
 	forme[6] = *lambda;
+	forme[7] = *begin;
+	forme[8] = *let;
+	forme[9] = *lete;
 }
 
 
@@ -85,7 +91,7 @@ object* set(object* o){
 		WARNING_MSG("Expression invalide dans le set");
 		return NULL;	
 	}
-	if (cdr(obj)->type == SFS_ADRESS_PRIM || cdr(obj)->type == SFS_ADRESS_FORME){
+  	if (cdr(obj)->type == SFS_ADRESS_PRIM || cdr(obj)->type == SFS_ADRESS_FORME){
 		WARNING_MSG("Ecriture impossible, %s de l'environnement meta est protégé\n",car(obj)->this.symbol);
 		return NULL;
 	}
@@ -217,6 +223,8 @@ erreur_si:
 	return NULL; 
 
 }
+
+
 object* lambda( object* o){
 /* Vérification de la forme */
 	
@@ -224,11 +232,121 @@ object* lambda( object* o){
 /* creation de l'obj comboun */
 	object* obj_lambda = make_object();
 	obj_lambda->type = SFS_COMPOUND;
-	obj_lambda->this.compound.param = car(cdr(o));
-	obj_lambda->this.compound.body = car(cdr(cdr(o)));
+	if(car(cdr(o))->type != SFS_PAIR ){
+		object* list = make_object();
+		list->this.pair.car = car(cdr(o));
+		list->this.pair.cdr = obj_empty_list;
+		obj_lambda->this.compound.param = list;	
+	}
+	else obj_lambda->this.compound.param = car(cdr(o));
+	obj_lambda->this.compound.body = cdr(cdr(o));
 	obj_lambda->this.compound.envt = obj_current;
 	DEBUG_MSG(" environement stocké: %p",obj_current);
 	return obj_lambda;	
 }
 
+
+/**
+*@fn object* begin (object* o)
+*
+*@brief fonction "BEGIN"
+*
+*@param object* o pointeur sur la structure à évaluer
+*
+*@return object* o valeur évaluée: TRUE ou FALSE
+*/
+
+object* begin (object * o){
+	object* ret;
+	o = cdr(o);
+	if (o == obj_empty_list){
+		WARNING_MSG("Pas assez d'arguments");
+		return NULL;
+	}
+	while(o != obj_empty_list){
+		ret = sfs_eval(car(o),obj_current);
+		o = cdr(o);
+	}
+	return ret;
+}
+
+object* let( object* o){
+	if( o == obj_empty_list){return NULL;}
+	if( cdr(o) == obj_empty_list){
+	DEBUG_MSG("<binding> vide");	
+	return NULL;}
+	if( cdr(cdr(o)) == obj_empty_list){
+	DEBUG_MSG("<body> vide");
+	return NULL;}
+	object* binding = car(cdr(o));
+	object* body = cdr(cdr(o));
+/*creation environnement*/
+	object* envt = make_object();
+	envt->type = SFS_PAIR;
+	envt->this.pair.car = obj_empty_list;
+	envt->this.pair.cdr = obj_current;
+/*binding*/
+	while(binding != obj_empty_list){
+		if(cdr(cdr(car(binding))) != obj_empty_list ){/*erreur*/ return NULL; }
+		if(car(car(binding))->type != SFS_SYMBOL ){/*erreur*/ return NULL; }		
+		object* obj_pair = make_object();
+		obj_pair->type = SFS_PAIR;
+		obj_pair->this.pair.car = car(car(binding));
+		obj_pair->this.pair.cdr = sfs_eval(car(cdr(car(binding))),obj_current);
+		if(obj_pair->this.pair.cdr == NULL){/*erreur*/ return NULL;}
+		ajout_tete_env(obj_pair, envt);
+		binding = cdr(binding);
+	}
+	object* ret;
+	if (body == obj_empty_list){
+		WARNING_MSG("Pas assez d'arguments");
+		return NULL;
+	}
+	while(body != obj_empty_list){
+		ret = sfs_eval(car(body),envt);
+		body = cdr(body);
+	}
+	return ret;
+	
+}		 
+
+object* lete( object* o){
+	if( o == obj_empty_list){return NULL;}
+	if( cdr(o) == obj_empty_list){
+	DEBUG_MSG("<binding> vide");	
+	return NULL;}
+	if( cdr(cdr(o)) == obj_empty_list){
+	DEBUG_MSG("<body> vide");
+	return NULL;}
+	object* binding = car(cdr(o));
+	object* body = cdr(cdr(o));
+/*creation environnement*/
+	object* envt = make_object();
+	envt->type = SFS_PAIR;
+	envt->this.pair.car = obj_empty_list;
+	envt->this.pair.cdr = obj_current;
+/*binding*/
+	while(binding != obj_empty_list){
+		if(cdr(cdr(car(binding))) != obj_empty_list ){/*erreur*/ return NULL; }
+		if(car(car(binding))->type != SFS_SYMBOL ){/*erreur*/ return NULL; }		
+		object* obj_pair = make_object();
+		obj_pair->type = SFS_PAIR;
+		obj_pair->this.pair.car = car(car(binding));
+		obj_pair->this.pair.cdr = sfs_eval(car(cdr(car(binding))),envt);
+		if(obj_pair->this.pair.cdr == NULL){/*erreur*/ return NULL;}
+		ajout_tete_env(obj_pair, envt);
+		binding = cdr(binding);
+	}
+	object* ret;
+	if (body == obj_empty_list){
+		WARNING_MSG("Pas assez d'arguments");
+		return NULL;
+	}
+	while(body != obj_empty_list){
+		ret = sfs_eval(car(body),envt);
+		body = cdr(body);
+	}
+	return ret;
+	
+}
 

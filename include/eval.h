@@ -29,6 +29,7 @@ void ajout_tete(object* , object** );
 object* supr_tete(object**);
 void ajout_tete_env(object* o, object* env);
 object* all_symb(object* o, object* tst_form);
+object* make_list(object* obj);
 
 #ifdef __cplusplus
 }
